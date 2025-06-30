@@ -1,1 +1,143 @@
 
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Từ điển Anh-Việt</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f4f4f4;
+            margin: 0;
+        }
+        .container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 100%;
+            max-width: 500px;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 25px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+        }
+        input[type="text"] {
+            width: calc(100% - 20px);
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #result {
+            margin-top: 25px;
+            padding: 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            background-color: #e9ecef;
+            min-height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: #333;
+            font-weight: bold;
+        }
+        .error {
+            color: #dc3545;
+        }
+        .success {
+            color: #28a745;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Từ điển Anh-Việt</h1>
+        <div class="form-group">
+            <label for="englishWord">Nhập từ tiếng Anh:</label>
+            <input type="text" id="englishWord" placeholder="Ví dụ: hello" onkeyup="if(event.keyCode === 13) searchWord()">
+        </div>
+        <button onclick="searchWord()">Tra cứu</button>
+        <div id="result">
+            Nhập từ để tra cứu...
+        </div>
+    </div>
+
+    <script>
+        // Mảng 1: Lưu trữ các từ tiếng Anh
+        const englishWords = [
+            "hello", "world", "cat", "dog", "house", 
+            "book", "computer", "apple", "banana", "water",
+            "love", "friend", "family", "travel", "music"
+        ];
+
+        // Mảng 2: Lưu trữ các từ tiếng Việt tương ứng
+        const vietnameseMeanings = [
+            "xin chào", "thế giới", "mèo", "chó", "ngôi nhà", 
+            "sách", "máy tính", "quả táo", "quả chuối", "nước",
+            "tình yêu", "bạn bè", "gia đình", "du lịch", "âm nhạc"
+        ];
+
+        function searchWord() {
+            const inputElement = document.getElementById("englishWord");
+            const resultElement = document.getElementById("result");
+            const searchTerm = inputElement.value.trim().toLowerCase(); // Lấy từ người dùng nhập, bỏ khoảng trắng và chuyển về chữ thường
+
+            if (searchTerm === "") {
+                resultElement.textContent = "Vui lòng nhập từ bạn muốn tìm kiếm.";
+                resultElement.className = "error"; // Thêm class error để đổi màu chữ
+                return;
+            }
+
+            // Tìm vị trí của từ tiếng Anh trong mảng englishWords
+            const index = englishWords.indexOf(searchTerm);
+
+            if (index !== -1) {
+                // Nếu tìm thấy, hiển thị từ tiếng Việt tương ứng từ mảng vietnameseMeanings
+                resultElement.textContent = vietnameseMeanings[index];
+                resultElement.className = "success"; // Thêm class success
+            } else {
+                // Nếu không tìm thấy, hiển thị thông báo "Không tìm thấy"
+                resultElement.textContent = `Không tìm thấy nghĩa cho từ "${searchTerm}".`;
+                resultElement.className = "error"; // Thêm class error
+            }
+        }
+
+        // Tùy chọn: Xóa kết quả và input khi người dùng click vào input
+        document.getElementById("englishWord").addEventListener("click", function() {
+            document.getElementById("englishWord").value = "";
+            document.getElementById("result").textContent = "Nhập từ để tra cứu...";
+            document.getElementById("result").className = ""; // Xóa các class màu
+        });
+    </script>
+</body>
+</html>
