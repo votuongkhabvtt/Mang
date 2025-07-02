@@ -1,1 +1,117 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tính giai thừa</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container {
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+        input {
+            padding: 8px;
+            width: 100%;
+            max-width: 200px;
+            margin-bottom: 10px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e8f4fc;
+            border-radius: 4px;
+            font-size: 18px;
+        }
+        .error {
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Tính giai thừa</h1>
+        
+        <label for="numberInput">Nhập số nguyên dương:</label>
+        <input type="number" id="numberInput" min="0" placeholder="Ví dụ: 5">
+        
+        <button onclick="tinhGiaiThua()">Tính giai thừa</button>
+        
+        <div id="result"></div>
+    </div>
 
+    <script>
+        // Hàm tính giai thừa
+        function tinhGiaiThua(n) {
+            if (n === 0 || n === 1) {
+                return 1;
+            }
+            let result = 1;
+            for (let i = 2; i <= n; i++) {
+                result *= i;
+            }
+            return result;
+        }
+
+        // Hàm xử lý khi nhấn nút
+        function tinhGiaiThua() {
+            const input = document.getElementById("numberInput");
+            const resultDiv = document.getElementById("result");
+            
+            const n = parseInt(input.value);
+            
+            // Kiểm tra đầu vào
+            if (isNaN(n) || n < 0) {
+                resultDiv.innerHTML = '<span class="error">Vui lòng nhập số nguyên dương!</span>';
+                return;
+            }
+            
+            // Tính toán và hiển thị kết quả
+            const factorial = tinhGiaiThua(n);
+            resultDiv.innerHTML = `${n}! = ${factorial}`;
+            
+            // Giải thích quá trình tính toán
+            let explanation = `Quá trình tính:<br>`;
+            if (n === 0 || n === 1) {
+                explanation += `0! và 1! đều bằng 1 theo quy ước`;
+            } else {
+                explanation += `1`;
+                for (let i = 2; i <= n; i++) {
+                    explanation += ` × ${i}`;
+                }
+                explanation += ` = ${factorial}`;
+            }
+            
+            resultDiv.innerHTML += `<br><small>${explanation}</small>`;
+        }
+    </script>
+</body>
+</html>
