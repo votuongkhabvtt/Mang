@@ -1,1 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Character Count Algorithm</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .container {
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        input, button {
+            padding: 8px;
+            margin: 5px 0;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #result {
+            margin-top: 15px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Character Count Algorithm</h1>
+        
+        <h3>Step 1: Predefined String</h3>
+        <p id="predefinedString"></p>
+        
+        <h3>Step 2: Enter a character to count</h3>
+        <input type="text" id="inputChar" maxlength="1" placeholder="Enter a single character">
+        
+        <button onclick="countCharacter()">Count Character</button>
+        
+        <div id="result"></div>
+        
+        <h3>Algorithm Steps:</h3>
+        <ol>
+            <li>Declare a string and assign it a value</li>
+            <li>Declare a character variable and get input from user</li>
+            <li>Declare a count variable and initialize to 0</li>
+            <li>Use a loop to iterate through each character in the string</li>
+            <li>Compare each character with the input character and increment count if they match</li>
+        </ol>
+    </div>
 
+    <script>
+        // Step 1: Declare a string and assign it a value
+        const predefinedString = "Hello, this is a sample string for character counting algorithm.";
+        document.getElementById("predefinedString").textContent = `String: "${predefinedString}"`;
+        
+        function countCharacter() {
+            // Step 2: Get character input from user
+            const inputChar = document.getElementById("inputChar").value;
+            
+            if (inputChar.length === 0) {
+                document.getElementById("result").textContent = "Please enter a character to count.";
+                return;
+            }
+            
+            // Step 3: Declare count variable and initialize to 0
+            let count = 0;
+            
+            // Step 4: Use loop to iterate through each character in the string
+            for (let i = 0; i < predefinedString.length; i++) {
+                // Compare characters (case sensitive)
+                if (predefinedString[i] === inputChar) {
+                    count++;
+                }
+            }
+            
+            // Display the result
+            document.getElementById("result").textContent = 
+                `The character '${inputChar}' appears ${count} times in the string.`;
+        }
+    </script>
+</body>
+</html>
