@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Matrix Diagonal Sum Calculator</title>
+    <title>Máy Tính Tổng Đường Chéo Ma Trận</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -66,38 +66,38 @@
 </head>
 <body>
     <div class="container">
-        <h1>Matrix Diagonal Sum Calculator</h1>
+        <h1>Máy Tính Tổng Đường Chéo Ma Trận</h1>
         
         <div class="step">
-            <h2>Step 1: Predefined Matrix</h2>
-            <p>Click the button to calculate the sum of the main diagonal for a predefined matrix.</p>
-            <button onclick="calculatePredefined()">Calculate Predefined Matrix</button>
+            <h2>Bước 1: Ma trận có sẵn</h2>
+            <p>Nhấn nút để tính tổng đường chéo chính của ma trận có sẵn.</p>
+            <button onclick="calculatePredefined()">Tính toán ma trận có sẵn</button>
             <div id="predefinedMatrix"></div>
             <div id="predefinedResult"></div>
         </div>
         
         <div class="step">
-            <h2>Step 2: User Input Matrix</h2>
-            <p>Enter the size of your square matrix (n x n):</p>
+            <h2>Bước 2: Ma trận nhập từ người dùng</h2>
+            <p>Nhập kích thước ma trận vuông (n x n):</p>
             <input type="number" id="matrixSize" min="1" max="10" value="3">
-            <button onclick="createInputMatrix()">Create Matrix</button>
+            <button onclick="createInputMatrix()">Tạo ma trận</button>
             <div id="matrixInput"></div>
             <div id="userResult"></div>
         </div>
     </div>
 
     <script>
-        // Step 1: Predefined matrix calculation
+        // Bước 1: Tính toán với ma trận có sẵn
         function calculatePredefined() {
-            // Create a predefined 3x3 matrix
+            // Tạo ma trận 3x3 có sẵn
             const matrix = [
                 [1.5, 2.3, 3.7],
                 [4.2, 5.0, 6.8],
                 [7.1, 8.4, 9.2]
             ];
             
-            // Display the matrix
-            let html = '<h3>Predefined Matrix:</h3><table>';
+            // Hiển thị ma trận
+            let html = '<h3>Ma trận có sẵn:</h3><table>';
             let sum = 0;
             
             for (let i = 0; i < matrix.length; i++) {
@@ -116,20 +116,20 @@
             
             document.getElementById('predefinedMatrix').innerHTML = html;
             document.getElementById('predefinedResult').innerHTML = 
-                `<div id="result">Sum of main diagonal: ${sum.toFixed(2)}</div>`;
+                `<div id="result">Tổng đường chéo chính: ${sum.toFixed(2)}</div>`;
         }
         
-        // Step 2: User input matrix calculation
+        // Bước 2: Tính toán với ma trận nhập từ người dùng
         function createInputMatrix() {
             const size = parseInt(document.getElementById('matrixSize').value);
             if (size < 1) {
-                alert('Matrix size must be at least 1');
+                alert('Kích thước ma trận phải lớn hơn hoặc bằng 1');
                 return;
             }
             
-            let html = `<h3>Enter your ${size}x${size} matrix:</h3><table>`;
+            let html = `<h3>Nhập ma trận ${size}x${size} của bạn:</h3><table>`;
             
-            // Create input fields for each matrix element
+            // Tạo các ô nhập liệu cho từng phần tử ma trận
             for (let i = 0; i < size; i++) {
                 html += '<tr>';
                 for (let j = 0; j < size; j++) {
@@ -137,7 +137,7 @@
                 }
                 html += '</tr>';
             }
-            html += '</table><button onclick="calculateUserMatrix()">Calculate Diagonal Sum</button>';
+            html += '</table><button onclick="calculateUserMatrix()">Tính tổng đường chéo</button>';
             
             document.getElementById('matrixInput').innerHTML = html;
             document.getElementById('userResult').innerHTML = '';
@@ -148,7 +148,7 @@
             const matrix = [];
             let sum = 0;
             
-            // Read values from input fields
+            // Đọc giá trị từ các ô nhập liệu
             for (let i = 0; i < size; i++) {
                 matrix[i] = [];
                 for (let j = 0; j < size; j++) {
@@ -157,8 +157,8 @@
                 }
             }
             
-            // Display the matrix with highlighted diagonal
-            let html = '<h3>Your Matrix:</h3><table>';
+            // Hiển thị ma trận với đường chéo được đánh dấu
+            let html = '<h3>Ma trận của bạn:</h3><table>';
             for (let i = 0; i < size; i++) {
                 html += '<tr>';
                 for (let j = 0; j < size; j++) {
@@ -175,7 +175,7 @@
             
             document.getElementById('matrixInput').innerHTML = html;
             document.getElementById('userResult').innerHTML = 
-                `<div id="result">Sum of main diagonal: ${sum.toFixed(2)}</div>`;
+                `<div id="result">Tổng đường chéo chính: ${sum.toFixed(2)}</div>`;
         }
     </script>
 </body>
