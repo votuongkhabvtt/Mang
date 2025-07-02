@@ -1,1 +1,302 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tính tổng cột trong mảng 2 chiều</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container {
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        h1, h2 {
+            color: #2c3e50;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            margin: 5px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        input, select {
+            padding: 8px;
+            margin: 5px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+        table {
+            border-collapse: collapse;
+            margin: 15px 0;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .highlight-col {
+            background-color: #f39c12;
+            font-weight: bold;
+        }
+        .result {
+            font-weight: bold;
+            margin: 15px 0;
+            padding: 10px;
+            background-color: #e8f4fc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        .step {
+            margin-bottom: 25px;
+            padding: 15px;
+            background-color: #fff;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .input-section {
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Tính tổng cột trong mảng 2 chiều</h1>
+        
+        <div class="step">
+            <h2>Bước 1: Mảng có sẵn</h2>
+            <p>Sử dụng mảng 2 chiều đã được khởi tạo sẵn để tính tổng một cột.</p>
+            <div class="input-section">
+                <button onclick="displayPredefinedArray()">Hiển thị mảng có sẵn</button>
+                <div id="predefinedArrayDisplay"></div>
+            </div>
+            <div class="input-section" id="predefinedInputSection" style="display: none;">
+                <label for="predefinedCol">Nhập số cột cần tính tổng (bắt đầu từ 0):</label>
+                <input type="number" id="predefinedCol" min="0" value="0">
+                <button onclick="calculatePredefinedColSum()">Tính tổng cột</button>
+                <div id="predefinedResult" class="result"></div>
+            </div>
+        </div>
+        
+        <div class="step">
+            <h2>Bước 2: Mảng nhập từ người dùng</h2>
+            <p>Tạo mảng 2 chiều bằng cách nhập kích thước và các giá trị từ người dùng.</p>
+            <div class="input-section">
+                <label for="rows">Số hàng:</label>
+                <input type="number" id="rows" min="1" max="10" value="3">
+                <label for="cols">Số cột:</label>
+                <input type="number" id="cols" min="1" max="10" value="3">
+                <button onclick="createUserArray()">Tạo mảng nhập liệu</button>
+            </div>
+            <div id="userArrayInput"></div>
+            <div id="userArrayDisplay"></div>
+            <div class="input-section" id="userInputSection" style="display: none;">
+                <label for="userCol">Nhập số cột cần tính tổng (bắt đầu từ 0):</label>
+                <input type="number" id="userCol" min="0" value="0">
+                <button onclick="calculateUserColSum()">Tính tổng cột</button>
+                <div id="userResult" class="result"></div>
+            </div>
+        </div>
+    </div>
 
+    <script>
+        // Mảng có sẵn
+        let predefinedArray = [
+            [1, 2, 3],
+            [4, 5, 6],
+            [7, 8, 9]
+        ];
+        
+        // Mảng của người dùng
+        let userArray = [];
+        
+        // Bước 1: Hiển thị mảng có sẵn
+        function displayPredefinedArray() {
+            let html = '<h3>Mảng có sẵn:</h3><table>';
+            html += '<tr><th>Hàng/Cột</th>';
+            for (let j = 0; j < predefinedArray[0].length; j++) {
+                html += `<th>${j}</th>`;
+            }
+            html += '</tr>';
+            
+            for (let i = 0; i < predefinedArray.length; i++) {
+                html += `<tr><th>${i}</th>`;
+                for (let j = 0; j < predefinedArray[i].length; j++) {
+                    html += `<td>${predefinedArray[i][j]}</td>`;
+                }
+                html += '</tr>';
+            }
+            html += '</table>';
+            
+            document.getElementById('predefinedArrayDisplay').innerHTML = html;
+            document.getElementById('predefinedInputSection').style.display = 'block';
+        }
+        
+        // Tính tổng cột trong mảng có sẵn
+        function calculatePredefinedColSum() {
+            const col = parseInt(document.getElementById('predefinedCol').value);
+            if (col < 0 || col >= predefinedArray[0].length) {
+                document.getElementById('predefinedResult').innerHTML = 
+                    `Cột ${col} không tồn tại trong mảng. Vui lòng nhập lại.`;
+                return;
+            }
+            
+            let sum = 0;
+            let html = '<h3>Mảng có sẵn (cột được chọn):</h3><table>';
+            html += '<tr><th>Hàng/Cột</th>';
+            for (let j = 0; j < predefinedArray[0].length; j++) {
+                if (j === col) {
+                    html += `<th class="highlight-col">${j}</th>`;
+                } else {
+                    html += `<th>${j}</th>`;
+                }
+            }
+            html += '</tr>';
+            
+            for (let i = 0; i < predefinedArray.length; i++) {
+                html += `<tr><th>${i}</th>`;
+                for (let j = 0; j < predefinedArray[i].length; j++) {
+                    if (j === col) {
+                        sum += predefinedArray[i][j];
+                        html += `<td class="highlight-col">${predefinedArray[i][j]}</td>`;
+                    } else {
+                        html += `<td>${predefinedArray[i][j]}</td>`;
+                    }
+                }
+                html += '</tr>';
+            }
+            html += '</table>';
+            
+            document.getElementById('predefinedArrayDisplay').innerHTML = html;
+            document.getElementById('predefinedResult').innerHTML = 
+                `Tổng của cột ${col} là: ${sum}`;
+        }
+        
+        // Bước 2: Tạo mảng từ người dùng
+        function createUserArray() {
+            const rows = parseInt(document.getElementById('rows').value);
+            const cols = parseInt(document.getElementById('cols').value);
+            
+            if (rows < 1 || cols < 1) {
+                alert('Số hàng và số cột phải lớn hơn 0');
+                return;
+            }
+            
+            let html = '<h3>Nhập giá trị cho mảng:</h3><table>';
+            html += '<tr><th>Hàng/Cột</th>';
+            for (let j = 0; j < cols; j++) {
+                html += `<th>${j}</th>`;
+            }
+            html += '</tr>';
+            
+            for (let i = 0; i < rows; i++) {
+                html += `<tr><th>${i}</th>`;
+                for (let j = 0; j < cols; j++) {
+                    html += `<td><input type="number" id="arr-${i}-${j}" placeholder="${i},${j}"></td>`;
+                }
+                html += '</tr>';
+            }
+            html += '</table><button onclick="saveUserArray()">Lưu mảng</button>';
+            
+            document.getElementById('userArrayInput').innerHTML = html;
+            document.getElementById('userArrayDisplay').innerHTML = '';
+            document.getElementById('userInputSection').style.display = 'none';
+        }
+        
+        // Lưu mảng người dùng
+        function saveUserArray() {
+            const rows = parseInt(document.getElementById('rows').value);
+            const cols = parseInt(document.getElementById('cols').value);
+            
+            userArray = [];
+            for (let i = 0; i < rows; i++) {
+                userArray[i] = [];
+                for (let j = 0; j < cols; j++) {
+                    const value = parseFloat(document.getElementById(`arr-${i}-${j}`).value) || 0;
+                    userArray[i][j] = value;
+                }
+            }
+            
+            // Hiển thị mảng đã nhập
+            let html = '<h3>Mảng của bạn:</h3><table>';
+            html += '<tr><th>Hàng/Cột</th>';
+            for (let j = 0; j < cols; j++) {
+                html += `<th>${j}</th>`;
+            }
+            html += '</tr>';
+            
+            for (let i = 0; i < rows; i++) {
+                html += `<tr><th>${i}</th>`;
+                for (let j = 0; j < cols; j++) {
+                    html += `<td>${userArray[i][j]}</td>`;
+                }
+                html += '</tr>';
+            }
+            html += '</table>';
+            
+            document.getElementById('userArrayDisplay').innerHTML = html;
+            document.getElementById('userInputSection').style.display = 'block';
+            document.getElementById('userResult').innerHTML = '';
+        }
+        
+        // Tính tổng cột trong mảng người dùng
+        function calculateUserColSum() {
+            const col = parseInt(document.getElementById('userCol').value);
+            const cols = userArray[0] ? userArray[0].length : 0;
+            
+            if (col < 0 || col >= cols) {
+                document.getElementById('userResult').innerHTML = 
+                    `Cột ${col} không tồn tại trong mảng. Vui lòng nhập lại.`;
+                return;
+            }
+            
+            let sum = 0;
+            let html = '<h3>Mảng của bạn (cột được chọn):</h3><table>';
+            html += '<tr><th>Hàng/Cột</th>';
+            for (let j = 0; j < cols; j++) {
+                if (j === col) {
+                    html += `<th class="highlight-col">${j}</th>`;
+                } else {
+                    html += `<th>${j}</th>`;
+                }
+            }
+            html += '</tr>';
+            
+            for (let i = 0; i < userArray.length; i++) {
+                html += `<tr><th>${i}</th>`;
+                for (let j = 0; j < userArray[i].length; j++) {
+                    if (j === col) {
+                        sum += userArray[i][j];
+                        html += `<td class="highlight-col">${userArray[i][j]}</td>`;
+                    } else {
+                        html += `<td>${userArray[i][j]}</td>`;
+                    }
+                }
+                html += '</tr>';
+            }
+            html += '</table>';
+            
+            document.getElementById('userArrayDisplay').innerHTML = html;
+            document.getElementById('userResult').innerHTML = 
+                `Tổng của cột ${col} là: ${sum}`;
+        }
+    </script>
+</body>
+</html>
