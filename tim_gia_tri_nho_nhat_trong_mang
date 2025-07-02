@@ -1,1 +1,145 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tìm giá trị nhỏ nhất trong mảng</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container {
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+        }
+        .step {
+            margin-bottom: 15px;
+            padding: 15px;
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            margin: 5px 0;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        input {
+            padding: 8px;
+            margin: 5px 0;
+            width: 100px;
+        }
+        #arrayInputs, #result {
+            margin-top: 15px;
+            padding: 10px;
+            background-color: #e8f4fc;
+            border-radius: 4px;
+        }
+        .highlight {
+            background-color: #ffeb3b;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Tìm giá trị nhỏ nhất trong mảng</h1>
+        
+        <div class="step">
+            <h2>Bước 1: Khai báo mảng</h2>
+            <p>Nhập kích thước mảng (SIZE):</p>
+            <input type="number" id="arraySize" min="1" max="20" value="5">
+            <button onclick="createArrayInputs()">Tạo mảng</button>
+        </div>
+        
+        <div class="step" id="inputStep" style="display: none;">
+            <h2>Bước 2: Nhập giá trị cho mảng</h2>
+            <div id="arrayInputs"></div>
+            <button onclick="findMinValue()">Tìm giá trị nhỏ nhất</button>
+        </div>
+        
+        <div class="step" id="resultStep" style="display: none;">
+            <h2>Kết quả</h2>
+            <div id="result"></div>
+            <div id="processSteps"></div>
+        </div>
+    </div>
 
+    <script>
+        let myArray = [];
+        let arraySize = 0;
+        
+        // Bước 1: Tạo form nhập liệu cho mảng
+        function createArrayInputs() {
+            arraySize = parseInt(document.getElementById('arraySize').value);
+            if (arraySize < 1) {
+                alert("Kích thước mảng phải lớn hơn 0");
+                return;
+            }
+            
+            let html = '';
+            for (let i = 0; i < arraySize; i++) {
+                html += `<input type="number" id="element${i}" placeholder="Phần tử ${i}">`;
+            }
+            
+            document.getElementById('arrayInputs').innerHTML = html;
+            document.getElementById('inputStep').style.display = 'block';
+            document.getElementById('resultStep').style.display = 'none';
+        }
+        
+        // Tìm giá trị nhỏ nhất
+        function findMinValue() {
+            // Bước 2: Nhập giá trị mảng từ người dùng
+            myArray = [];
+            for (let i = 0; i < arraySize; i++) {
+                const value = parseInt(document.getElementById(`element${i}`).value) || 0;
+                myArray.push(value);
+            }
+            
+            let processHTML = "<h3>Quá trình thực hiện:</h3><ol>";
+            
+            // Bước 3: Gán phần tử đầu tiên là nhỏ nhất
+            let minValue = myArray[0];
+            processHTML += `<li>Gán minValue = phần tử đầu tiên = ${minValue}</li>`;
+            
+            // Bước 4: Duyệt mảng từ phần tử thứ 2
+            processHTML += `<li>Duyệt mảng từ phần tử thứ 2 đến hết:</li><ul>`;
+            
+            for (let i = 1; i < myArray.length; i++) {
+                processHTML += `<li>So sánh phần tử ${i} (${myArray[i]}) với minValue (${minValue})</li>`;
+                
+                if (myArray[i] < minValue) {
+                    processHTML += `<li class="highlight">${myArray[i]} < ${minValue} → Cập nhật minValue = ${myArray[i]}</li>`;
+                    minValue = myArray[i];
+                }
+            }
+            
+            processHTML += "</ul>";
+            
+            // Bước 5: Hiển thị kết quả
+            document.getElementById('result').innerHTML = 
+                `<p>Mảng của bạn: [${myArray.join(', ')}]</p>
+                 <p class="highlight">Giá trị nhỏ nhất trong mảng là: ${minValue}</p>`;
+            
+            document.getElementById('processSteps').innerHTML = processHTML;
+            document.getElementById('resultStep').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
