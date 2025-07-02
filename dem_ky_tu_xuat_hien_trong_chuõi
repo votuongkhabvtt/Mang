@@ -61,7 +61,7 @@
 
     <script>
         // Step 1: Declare a string and assign it a value
-        const predefinedString = "Hello, this is a sample string for character counting algorithm.";
+        const predefinedString = "Cộng hòa xã hội chủ nghĩa Việt nam.";
         document.getElementById("predefinedString").textContent = `String: "${predefinedString}"`;
         
         function countCharacter() {
