@@ -1,1 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matrix Diagonal Sum Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .container {
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        h1, h2 {
+            color: #2c3e50;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            margin: 5px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        input {
+            padding: 8px;
+            margin: 5px;
+            width: 80px;
+        }
+        table {
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        .diagonal {
+            background-color: #f39c12;
+            font-weight: bold;
+        }
+        #result {
+            font-weight: bold;
+            margin: 15px 0;
+            padding: 10px;
+            background-color: #e8f4fc;
+            border-radius: 4px;
+        }
+        .step {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #fff;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Matrix Diagonal Sum Calculator</h1>
+        
+        <div class="step">
+            <h2>Step 1: Predefined Matrix</h2>
+            <p>Click the button to calculate the sum of the main diagonal for a predefined matrix.</p>
+            <button onclick="calculatePredefined()">Calculate Predefined Matrix</button>
+            <div id="predefinedMatrix"></div>
+            <div id="predefinedResult"></div>
+        </div>
+        
+        <div class="step">
+            <h2>Step 2: User Input Matrix</h2>
+            <p>Enter the size of your square matrix (n x n):</p>
+            <input type="number" id="matrixSize" min="1" max="10" value="3">
+            <button onclick="createInputMatrix()">Create Matrix</button>
+            <div id="matrixInput"></div>
+            <div id="userResult"></div>
+        </div>
+    </div>
 
+    <script>
+        // Step 1: Predefined matrix calculation
+        function calculatePredefined() {
+            // Create a predefined 3x3 matrix
+            const matrix = [
+                [1.5, 2.3, 3.7],
+                [4.2, 5.0, 6.8],
+                [7.1, 8.4, 9.2]
+            ];
+            
+            // Display the matrix
+            let html = '<h3>Predefined Matrix:</h3><table>';
+            let sum = 0;
+            
+            for (let i = 0; i < matrix.length; i++) {
+                html += '<tr>';
+                for (let j = 0; j < matrix[i].length; j++) {
+                    if (i === j) {
+                        sum += matrix[i][j];
+                        html += `<td class="diagonal">${matrix[i][j]}</td>`;
+                    } else {
+                        html += `<td>${matrix[i][j]}</td>`;
+                    }
+                }
+                html += '</tr>';
+            }
+            html += '</table>';
+            
+            document.getElementById('predefinedMatrix').innerHTML = html;
+            document.getElementById('predefinedResult').innerHTML = 
+                `<div id="result">Sum of main diagonal: ${sum.toFixed(2)}</div>`;
+        }
+        
+        // Step 2: User input matrix calculation
+        function createInputMatrix() {
+            const size = parseInt(document.getElementById('matrixSize').value);
+            if (size < 1) {
+                alert('Matrix size must be at least 1');
+                return;
+            }
+            
+            let html = `<h3>Enter your ${size}x${size} matrix:</h3><table>`;
+            
+            // Create input fields for each matrix element
+            for (let i = 0; i < size; i++) {
+                html += '<tr>';
+                for (let j = 0; j < size; j++) {
+                    html += `<td><input type="number" step="0.01" id="m${i}${j}" placeholder="${i},${j}"></td>`;
+                }
+                html += '</tr>';
+            }
+            html += '</table><button onclick="calculateUserMatrix()">Calculate Diagonal Sum</button>';
+            
+            document.getElementById('matrixInput').innerHTML = html;
+            document.getElementById('userResult').innerHTML = '';
+        }
+        
+        function calculateUserMatrix() {
+            const size = parseInt(document.getElementById('matrixSize').value);
+            const matrix = [];
+            let sum = 0;
+            
+            // Read values from input fields
+            for (let i = 0; i < size; i++) {
+                matrix[i] = [];
+                for (let j = 0; j < size; j++) {
+                    const value = parseFloat(document.getElementById(`m${i}${j}`).value) || 0;
+                    matrix[i][j] = value;
+                }
+            }
+            
+            // Display the matrix with highlighted diagonal
+            let html = '<h3>Your Matrix:</h3><table>';
+            for (let i = 0; i < size; i++) {
+                html += '<tr>';
+                for (let j = 0; j < size; j++) {
+                    if (i === j) {
+                        sum += matrix[i][j];
+                        html += `<td class="diagonal">${matrix[i][j]}</td>`;
+                    } else {
+                        html += `<td>${matrix[i][j]}</td>`;
+                    }
+                }
+                html += '</tr>';
+            }
+            html += '</table>';
+            
+            document.getElementById('matrixInput').innerHTML = html;
+            document.getElementById('userResult').innerHTML = 
+                `<div id="result">Sum of main diagonal: ${sum.toFixed(2)}</div>`;
+        }
+    </script>
+</body>
+</html>
