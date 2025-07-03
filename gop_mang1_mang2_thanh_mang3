@@ -1,1 +1,188 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gộp hai mảng một chiều</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+        }
+        .container {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        label {
+            display: inline-block;
+            width: 150px;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        input {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        .array-container {
+            margin: 15px 0;
+            padding: 10px;
+            background-color: #ecf0f1;
+            border-radius: 4px;
+        }
+        .result {
+            font-weight: bold;
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #e8f8f5;
+            border-left: 4px solid #2ecc71;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Gộp hai mảng một chiều</h1>
+    
+    <div class="container">
+        <h2>Bước 1: Nhập kích thước mảng</h2>
+        <div>
+            <label for="array1Size">Kích thước mảng 1:</label>
+            <input type="number" id="array1Size" min="1" value="5">
+        </div>
+        <div>
+            <label for="array2Size">Kích thước mảng 2:</label>
+            <input type="number" id="array2Size" min="1" value="5">
+        </div>
+        <button onclick="createArrayInputs()">Tạo mảng nhập liệu</button>
+    </div>
+    
+    <div class="container" id="inputArrays" style="display: none;">
+        <h2>Bước 2: Nhập giá trị cho các mảng</h2>
+        <div id="array1Inputs" class="array-container"></div>
+        <div id="array2Inputs" class="array-container"></div>
+        <button onclick="mergeArrays()">Gộp mảng</button>
+    </div>
+    
+    <div class="container" id="resultContainer" style="display: none;">
+        <h2>Kết quả gộp mảng</h2>
+        <div class="array-container">
+            <h3>Mảng 1:</h3>
+            <p id="array1Values"></p>
+        </div>
+        <div class="array-container">
+            <h3>Mảng 2:</h3>
+            <p id="array2Values"></p>
+        </div>
+        <div class="result">
+            <h3>Mảng 3 (Mảng gộp):</h3>
+            <p id="mergedArray"></p>
+        </div>
+    </div>
 
+    <script>
+        function createArrayInputs() {
+            // Lấy kích thước mảng từ người dùng
+            const array1Size = parseInt(document.getElementById('array1Size').value);
+            const array2Size = parseInt(document.getElementById('array2Size').value);
+            
+            // Tạo input cho mảng 1
+            let array1Html = '<h3>Mảng 1:</h3>';
+            for (let i = 0; i < array1Size; i++) {
+                array1Html += `
+                    <div>
+                        <label for="arr1-${i}">Phần tử ${i + 1}:</label>
+                        <input type="number" id="arr1-${i}" placeholder="Nhập giá trị">
+                    </div>
+                `;
+            }
+            document.getElementById('array1Inputs').innerHTML = array1Html;
+            
+            // Tạo input cho mảng 2
+            let array2Html = '<h3>Mảng 2:</h3>';
+            for (let i = 0; i < array2Size; i++) {
+                array2Html += `
+                    <div>
+                        <label for="arr2-${i}">Phần tử ${i + 1}:</label>
+                        <input type="number" id="arr2-${i}" placeholder="Nhập giá trị">
+                    </div>
+                `;
+            }
+            document.getElementById('array2Inputs').innerHTML = array2Html;
+            
+            // Hiển thị phần nhập liệu
+            document.getElementById('inputArrays').style.display = 'block';
+            document.getElementById('resultContainer').style.display = 'none';
+        }
+        
+        function mergeArrays() {
+            const array1Size = parseInt(document.getElementById('array1Size').value);
+            const array2Size = parseInt(document.getElementById('array2Size').value);
+            
+            // Tạo mảng 1 từ input
+            let array1 = [];
+            for (let i = 0; i < array1Size; i++) {
+                const value = document.getElementById(`arr1-${i}`).value;
+                if (value === '') {
+                    alert(`Vui lòng nhập giá trị cho phần tử ${i + 1} của mảng 1`);
+                    return;
+                }
+                array1.push(parseFloat(value));
+            }
+            
+            // Tạo mảng 2 từ input
+            let array2 = [];
+            for (let i = 0; i < array2Size; i++) {
+                const value = document.getElementById(`arr2-${i}`).value;
+                if (value === '') {
+                    alert(`Vui lòng nhập giá trị cho phần tử ${i + 1} của mảng 2`);
+                    return;
+                }
+                array2.push(parseFloat(value));
+            }
+            
+            // Tạo mảng 3 với kích thước bằng tổng 2 mảng
+            let array3 = new Array(array1.length + array2.length);
+            
+            // Bước 4: Sao chép mảng 1 vào mảng 3
+            for (let i = 0; i < array1.length; i++) {
+                array3[i] = array1[i];
+            }
+            
+            // Bước 5: Sao chép mảng 2 vào mảng 3
+            for (let i = 0; i < array2.length; i++) {
+                array3[array1.length + i] = array2[i];
+            }
+            
+            // Hiển thị kết quả
+            document.getElementById('array1Values').textContent = array1.join(', ');
+            document.getElementById('array2Values').textContent = array2.join(', ');
+            document.getElementById('mergedArray').textContent = array3.join(', ');
+            document.getElementById('resultContainer').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
