@@ -1,1 +1,233 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tìm phần tử lớn nhất trong mảng hai chiều</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .container {
+            margin-bottom: 20px;
+        }
+        button {
+            padding: 8px 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        table {
+            border-collapse: collapse;
+            margin: 10px 0;
+        }
+        td, th {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        input {
+            padding: 6px;
+            margin: 5px 0;
+        }
+        .result {
+            font-weight: bold;
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-left: 4px solid #4CAF50;
+        }
+    </style>
+</head>
+<body>
+    <h1>Tìm phần tử lớn nhất trong mảng hai chiều</h1>
+    
+    <div class="container">
+        <h2>Bước 1: Tìm phần tử lớn nhất trong ma trận có sẵn</h2>
+        <button onclick="findMaxInPredefinedMatrix()">Tìm phần tử lớn nhất</button>
+        <div id="predefinedMatrix"></div>
+        <div id="predefinedResult" class="result"></div>
+    </div>
+    
+    <div class="container">
+        <h2>Bước 2: Tìm phần tử lớn nhất trong ma trận nhập từ người dùng</h2>
+        <div>
+            <label for="rows">Số hàng:</label>
+            <input type="number" id="rows" min="1" value="3">
+            
+            <label for="cols">Số cột:</label>
+            <input type="number" id="cols" min="1" value="3">
+            
+            <button onclick="createInputMatrix()">Tạo ma trận nhập</button>
+        </div>
+        
+        <div id="matrixInput"></div>
+        <button onclick="findMaxInUserMatrix()" id="findMaxBtn" style="display:none;">Tìm phần tử lớn nhất</button>
+        <div id="userMatrix"></div>
+        <div id="userResult" class="result"></div>
+    </div>
+
+    <script>
+        // Ma trận mẫu
+        const sampleMatrix = [
+            [12, 23, 34],
+            [45, 56, 67],
+            [78, 89, 90]
+        ];
+        
+        // Hiển thị ma trận mẫu
+        function displayPredefinedMatrix(matrix) {
+            let html = '<table>';
+            html += '<tr><th>Hàng/Cột</th>';
+            for (let j = 0; j < matrix[0].length; j++) {
+                html += `<th>Cột ${j+1}</th>`;
+            }
+            html += '</tr>';
+            
+            for (let i = 0; i < matrix.length; i++) {
+                html += `<tr><th>Hàng ${i+1}</th>`;
+                for (let j = 0; j < matrix[i].length; j++) {
+                    html += `<td>${matrix[i][j]}</td>`;
+                }
+                html += '</tr>';
+            }
+            html += '</table>';
+            document.getElementById('predefinedMatrix').innerHTML = html;
+        }
+        
+        // Tìm phần tử lớn nhất trong ma trận mẫu
+        function findMaxInPredefinedMatrix() {
+            displayPredefinedMatrix(sampleMatrix);
+            
+            // Khởi tạo giá trị ban đầu
+            let max = sampleMatrix[0][0];
+            let maxRow = 0;
+            let maxCol = 0;
+            
+            // Duyệt qua ma trận
+            for (let i = 0; i < sampleMatrix.length; i++) {
+                for (let j = 0; j < sampleMatrix[i].length; j++) {
+                    if (sampleMatrix[i][j] > max) {
+                        max = sampleMatrix[i][j];
+                        maxRow = i;
+                        maxCol = j;
+                    }
+                }
+            }
+            
+            // Hiển thị kết quả
+            document.getElementById('predefinedResult').innerHTML = 
+                `Phần tử lớn nhất trong ma trận là: ${max}<br>
+                 Vị trí: Hàng ${maxRow + 1}, Cột ${maxCol + 1}`;
+        }
+        
+        // Tạo form nhập liệu cho ma trận người dùng
+        function createInputMatrix() {
+            const rows = parseInt(document.getElementById('rows').value);
+            const cols = parseInt(document.getElementById('cols').value);
+            
+            let html = '<table>';
+            html += '<tr><th>Hàng/Cột</th>';
+            for (let j = 0; j < cols; j++) {
+                html += `<th>Cột ${j+1}</th>`;
+            }
+            html += '</tr>';
+            
+            for (let i = 0; i < rows; i++) {
+                html += `<tr><th>Hàng ${i+1}</th>`;
+                for (let j = 0; j < cols; j++) {
+                    html += `<td><input type="number" id="cell-${i}-${j}" placeholder="Nhập giá trị"></td>`;
+                }
+                html += '</tr>';
+            }
+            html += '</table>';
+            
+            document.getElementById('matrixInput').innerHTML = html;
+            document.getElementById('findMaxBtn').style.display = 'inline-block';
+        }
+        
+        // Tìm phần tử lớn nhất trong ma trận người dùng nhập
+        function findMaxInUserMatrix() {
+            const rows = parseInt(document.getElementById('rows').value);
+            const cols = parseInt(document.getElementById('cols').value);
+            
+            // Tạo ma trận từ dữ liệu nhập
+            let userMatrix = [];
+            let isValid = true;
+            
+            for (let i = 0; i < rows; i++) {
+                userMatrix[i] = [];
+                for (let j = 0; j < cols; j++) {
+                    const value = parseFloat(document.getElementById(`cell-${i}-${j}`).value);
+                    if (isNaN(value)) {
+                        isValid = false;
+                        alert(`Vui lòng nhập giá trị hợp lệ cho Hàng ${i+1}, Cột ${j+1}`);
+                        return;
+                    }
+                    userMatrix[i][j] = value;
+                }
+            }
+            
+            // Hiển thị ma trận đã nhập
+            displayUserMatrix(userMatrix);
+            
+            // Tìm phần tử lớn nhất
+            let max = userMatrix[0][0];
+            let maxRow = 0;
+            let maxCol = 0;
+            
+            for (let i = 0; i < userMatrix.length; i++) {
+                for (let j = 0; j < userMatrix[i].length; j++) {
+                    if (userMatrix[i][j] > max) {
+                        max = userMatrix[i][j];
+                        maxRow = i;
+                        maxCol = j;
+                    }
+                }
+            }
+            
+            // Hiển thị kết quả
+            document.getElementById('userResult').innerHTML = 
+                `Phần tử lớn nhất trong ma trận là: ${max}<br>
+                 Vị trí: Hàng ${maxRow + 1}, Cột ${maxCol + 1}`;
+        }
+        
+        // Hiển thị ma trận người dùng đã nhập
+        function displayUserMatrix(matrix) {
+            let html = '<h3>Ma trận đã nhập:</h3><table>';
+            html += '<tr><th>Hàng/Cột</th>';
+            for (let j = 0; j < matrix[0].length; j++) {
+                html += `<th>Cột ${j+1}</th>`;
+            }
+            html += '</tr>';
+            
+            for (let i = 0; i < matrix.length; i++) {
+                html += `<tr><th>Hàng ${i+1}</th>`;
+                for (let j = 0; j < matrix[i].length; j++) {
+                    html += `<td>${matrix[i][j]}</td>`;
+                }
+                html += '</tr>';
+            }
+            html += '</table>';
+            document.getElementById('userMatrix').innerHTML = html;
+        }
+        
+        // Hiển thị ma trận mẫu khi trang được tải
+        window.onload = function() {
+            displayPredefinedMatrix(sampleMatrix);
+        };
+    </script>
+</body>
+</html>
 
