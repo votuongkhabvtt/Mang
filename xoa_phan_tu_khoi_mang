@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Xóa phần tử khỏi mảng</title>
+    <title>Xóa phần tử để lại vị trí rỗng</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -70,13 +70,15 @@
             color: green;
             font-weight: bold;
         }
-        .highlight {
+        .empty {
             background-color: #ffecec;
+            color: #999;
+            font-style: italic;
         }
     </style>
 </head>
 <body>
-    <h1>Xóa phần tử khỏi mảng</h1>
+    <h1>Xóa phần tử để lại vị trí rỗng</h1>
     
     <div class="container">
         <h2>Bước 1: Khởi tạo mảng</h2>
@@ -179,11 +181,11 @@
             document.getElementById('originalArrayDisplay').innerHTML = html;
         }
         
-        // Xóa phần tử khỏi mảng
+        // Xóa phần tử khỏi mảng (để lại vị trí rỗng)
         function deleteFromArray() {
             const deleteValue = parseInt(document.getElementById('deleteValue').value);
             
-            // Tìm vị trí phần tử cần xóa (Bước 3)
+            // Tìm vị trí phần tử cần xóa
             let indexToDelete = -1;
             for (let i = 0; i < myArray.length; i++) {
                 if (myArray[i] === deleteValue) {
@@ -203,17 +205,14 @@
             // Tạo bản sao của mảng ban đầu
             const newArray = [...myArray];
             
-            // Xóa phần tử (Bước 4)
-            for (let i = indexToDelete; i < newArray.length - 1; i++) {
-                newArray[i] = newArray[i + 1];
-            }
-            newArray.length = newArray.length - 1; // Giảm kích thước mảng
+            // Đánh dấu vị trí xóa là "rỗng" (null)
+            newArray[indexToDelete] = null;
             
             // Hiển thị kết quả
             displayDeleteResult(newArray, indexToDelete);
             
             document.getElementById('message').innerHTML = 
-                `<p class="success">Đã xóa phần tử ${deleteValue} tại vị trí ${indexToDelete} thành công!</p>`;
+                `<p class="success">Đã xóa phần tử ${deleteValue} tại vị trí ${indexToDelete} (để lại rỗng)!</p>`;
             document.getElementById('resultSection').style.display = 'block';
         }
         
@@ -232,11 +231,7 @@
             // Dòng giá trị cũ
             html += '<tr><th>Old Value</th>';
             for (let i = 0; i < newArray.length; i++) {
-                if (i < deletedIndex) {
-                    html += `<td>${myArray[i]}</td>`;
-                } else if (i >= deletedIndex) {
-                    html += `<td>${myArray[i+1]}</td>`;
-                }
+                html += `<td>${myArray[i]}</td>`;
             }
             html += '</tr>';
             
@@ -244,7 +239,7 @@
             html += '<tr><th>New Value</th>';
             for (let i = 0; i < newArray.length; i++) {
                 if (i === deletedIndex) {
-                    html += `<td class="highlight">${newArray[i]}</td>`;
+                    html += `<td class="empty">rỗng</td>`;
                 } else {
                     html += `<td>${newArray[i]}</td>`;
                 }
