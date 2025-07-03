@@ -1,1 +1,259 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xóa phần tử khỏi mảng</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+        }
+        .container {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        label {
+            display: inline-block;
+            width: 150px;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        input, button {
+            padding: 8px;
+            margin-bottom: 10px;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        .array-display {
+            margin: 20px 0;
+            overflow-x: auto;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 10px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .error {
+            color: red;
+            font-weight: bold;
+        }
+        .success {
+            color: green;
+            font-weight: bold;
+        }
+        .highlight {
+            background-color: #ffecec;
+        }
+    </style>
+</head>
+<body>
+    <h1>Xóa phần tử khỏi mảng</h1>
+    
+    <div class="container">
+        <h2>Bước 1: Khởi tạo mảng</h2>
+        <div>
+            <label for="arraySize">Kích thước mảng (N):</label>
+            <input type="number" id="arraySize" min="1" value="10">
+            <button onclick="initializeArray()">Tạo mảng</button>
+        </div>
+        
+        <div id="arrayInitialization" style="display: none;">
+            <h3>Nhập giá trị cho mảng:</h3>
+            <div id="arrayInputs"></div>
+            <button onclick="saveArray()">Lưu mảng</button>
+        </div>
+    </div>
+    
+    <div class="container" id="deleteSection" style="display: none;">
+        <h2>Bước 2: Nhập phần tử cần xóa</h2>
+        <div>
+            <label for="deleteValue">Phần tử cần xóa (X):</label>
+            <input type="number" id="deleteValue">
+        </div>
+        <button onclick="deleteFromArray()">Xóa khỏi mảng</button>
+    </div>
+    
+    <div class="container" id="resultSection" style="display: none;">
+        <h2>Kết quả</h2>
+        <div id="originalArrayDisplay" class="array-display"></div>
+        <div id="deleteResult" class="array-display"></div>
+        <div id="message"></div>
+    </div>
 
+    <script>
+        let myArray = [];
+        let arraySize = 0;
+        
+        // Khởi tạo mảng
+        function initializeArray() {
+            arraySize = parseInt(document.getElementById('arraySize').value);
+            if (arraySize < 1) {
+                alert("Kích thước mảng phải lớn hơn 0");
+                return;
+            }
+            
+            let html = '';
+            for (let i = 0; i < arraySize; i++) {
+                html += `
+                    <div>
+                        <label for="arr-${i}">Phần tử ${i}:</label>
+                        <input type="number" id="arr-${i}" placeholder="Nhập giá trị">
+                    </div>
+                `;
+            }
+            
+            document.getElementById('arrayInputs').innerHTML = html;
+            document.getElementById('arrayInitialization').style.display = 'block';
+            document.getElementById('deleteSection').style.display = 'none';
+            document.getElementById('resultSection').style.display = 'none';
+        }
+        
+        // Lưu mảng
+        function saveArray() {
+            myArray = [];
+            for (let i = 0; i < arraySize; i++) {
+                const value = document.getElementById(`arr-${i}`).value;
+                if (value === '') {
+                    alert(`Vui lòng nhập giá trị cho phần tử ${i}`);
+                    return;
+                }
+                myArray.push(parseInt(value));
+            }
+            
+            // Hiển thị mảng ban đầu
+            displayOriginalArray();
+            
+            document.getElementById('deleteSection').style.display = 'block';
+            document.getElementById('resultSection').style.display = 'none';
+        }
+        
+        // Hiển thị mảng ban đầu
+        function displayOriginalArray() {
+            let html = '<h3>Mảng ban đầu:</h3>';
+            html += '<table>';
+            
+            // Dòng index
+            html += '<tr><th>Index</th>';
+            for (let i = 0; i < myArray.length; i++) {
+                html += `<td>${i}</td>`;
+            }
+            html += '</tr>';
+            
+            // Dòng giá trị
+            html += '<tr><th>Value</th>';
+            for (let i = 0; i < myArray.length; i++) {
+                html += `<td>${myArray[i]}</td>`;
+            }
+            html += '</tr>';
+            
+            html += '</table>';
+            document.getElementById('originalArrayDisplay').innerHTML = html;
+        }
+        
+        // Xóa phần tử khỏi mảng
+        function deleteFromArray() {
+            const deleteValue = parseInt(document.getElementById('deleteValue').value);
+            
+            // Tìm vị trí phần tử cần xóa (Bước 3)
+            let indexToDelete = -1;
+            for (let i = 0; i < myArray.length; i++) {
+                if (myArray[i] === deleteValue) {
+                    indexToDelete = i;
+                    break;
+                }
+            }
+            
+            if (indexToDelete === -1) {
+                document.getElementById('message').innerHTML = 
+                    `<p class="error">Phần tử ${deleteValue} không tồn tại trong mảng!</p>`;
+                document.getElementById('resultSection').style.display = 'block';
+                document.getElementById('deleteResult').innerHTML = '';
+                return;
+            }
+            
+            // Tạo bản sao của mảng ban đầu
+            const newArray = [...myArray];
+            
+            // Xóa phần tử (Bước 4)
+            for (let i = indexToDelete; i < newArray.length - 1; i++) {
+                newArray[i] = newArray[i + 1];
+            }
+            newArray.length = newArray.length - 1; // Giảm kích thước mảng
+            
+            // Hiển thị kết quả
+            displayDeleteResult(newArray, indexToDelete);
+            
+            document.getElementById('message').innerHTML = 
+                `<p class="success">Đã xóa phần tử ${deleteValue} tại vị trí ${indexToDelete} thành công!</p>`;
+            document.getElementById('resultSection').style.display = 'block';
+        }
+        
+        // Hiển thị kết quả sau khi xóa
+        function displayDeleteResult(newArray, deletedIndex) {
+            let html = '<h3>Mảng sau khi xóa:</h3>';
+            html += '<table>';
+            
+            // Dòng index
+            html += '<tr><th>Index</th>';
+            for (let i = 0; i < newArray.length; i++) {
+                html += `<td>${i}</td>`;
+            }
+            html += '</tr>';
+            
+            // Dòng giá trị cũ
+            html += '<tr><th>Old Value</th>';
+            for (let i = 0; i < newArray.length; i++) {
+                if (i < deletedIndex) {
+                    html += `<td>${myArray[i]}</td>`;
+                } else if (i >= deletedIndex) {
+                    html += `<td>${myArray[i+1]}</td>`;
+                }
+            }
+            html += '</tr>';
+            
+            // Dòng giá trị mới
+            html += '<tr><th>New Value</th>';
+            for (let i = 0; i < newArray.length; i++) {
+                if (i === deletedIndex) {
+                    html += `<td class="highlight">${newArray[i]}</td>`;
+                } else {
+                    html += `<td>${newArray[i]}</td>`;
+                }
+            }
+            html += '</tr>';
+            
+            html += '</table>';
+            document.getElementById('deleteResult').innerHTML = html;
+        }
+    </script>
+</body>
+</html>
