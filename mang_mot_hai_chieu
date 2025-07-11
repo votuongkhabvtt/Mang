@@ -1,1 +1,438 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luyện tập Thao tác với Mảng</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: #333;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(to right, #1e3c72, #2a5298);
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .exercises-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 20px;
+            padding: 25px;
+        }
+        
+        .exercise {
+            background: #f8f9ff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .exercise:hover {
+            transform: translateY(-5px);
+        }
+        
+        .exercise-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #1e3c72;
+        }
+        
+        .exercise-number {
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-right: 15px;
+        }
+        
+        .exercise-title {
+            font-size: 1.3rem;
+            color: #1e3c72;
+        }
+        
+        .exercise-description {
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+        
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        button {
+            background: linear-gradient(to right, #1e3c72, #2a5298);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 15px;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+        
+        button:active {
+            transform: translateY(1px);
+        }
+        
+        input, textarea {
+            padding: 10px 15px;
+            border: 1px solid #d0d0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+        
+        .result {
+            background: #e3f2fd;
+            border-left: 4px solid #1e88e5;
+            padding: 15px;
+            border-radius: 0 8px 8px 0;
+            margin-top: 15px;
+            font-size: 1.1rem;
+            min-height: 60px;
+            white-space: pre-wrap;
+            font-family: monospace;
+            line-height: 1.8;
+        }
+        
+        .array-display {
+            background: #f0f4ff;
+            border: 1px solid #d0d0e0;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            font-family: monospace;
+            line-height: 1.6;
+        }
+        
+        .highlight {
+            background-color: #ffeb3b;
+            padding: 0 5px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+        
+        .success {
+            color: #2e7d32;
+        }
+        
+        .error {
+            color: #c62828;
+        }
+        
+        .info {
+            color: #1565c0;
+        }
+        
+        .matrix-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 15px 0;
+        }
+        
+        .matrix-row {
+            display: flex;
+            margin-bottom: 5px;
+        }
+        
+        .matrix-cell {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #e3f2fd;
+            border: 1px solid #90caf9;
+            margin: 0 3px;
+            font-weight: bold;
+            border-radius: 5px;
+        }
+        
+        .matrix-header {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        footer {
+            background: #1e3c72;
+            color: white;
+            text-align: center;
+            padding: 15px;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 600px) {
+            .exercises-container {
+                grid-template-columns: 1fr;
+                padding: 15px;
+            }
+            
+            .exercise {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Luyện tập Thao tác với Mảng</h1>
+            <p class="subtitle">Một chiều và Hai chiều - Bài tập thực hành</p>
+        </header>
+        
+        <div class="exercises-container">
+            <!-- Bài 1 -->
+            <div class="exercise">
+                <div class="exercise-header">
+                    <div class="exercise-number">1</div>
+                    <h2 class="exercise-title">In mảng hai chiều</h2>
+                </div>
+                <p class="exercise-description">Viết chương trình khởi tạo mảng 2 chiều với một bộ phần tử có sẵn, sau đó in ra các phần tử trong mảng.</p>
+                <div class="array-display">
+                    let a = [<br>
+                    &nbsp;&nbsp;[1, 2, 1, 24],<br>
+                    &nbsp;&nbsp;[8, 11, 9, 4],<br>
+                    &nbsp;&nbsp;[7, 0, 7, 27],<br>
+                    &nbsp;&nbsp;[7, 4, 28, 14],<br>
+                    &nbsp;&nbsp;[3, 10, 26, 7]<br>
+                    ];
+                </div>
+                <div class="controls">
+                    <button id="btnExercise1">In mảng</button>
+                </div>
+                <div class="result" id="result1">Kết quả sẽ hiển thị ở đây</div>
+            </div>
+            
+            <!-- Bài 2 -->
+            <div class="exercise">
+                <div class="exercise-header">
+                    <div class="exercise-number">2</div>
+                    <h2 class="exercise-title">Đảo ngược mảng ký tự</h2>
+                </div>
+                <p class="exercise-description">Viết chương trình in các ký tự trong một mảng theo thứ tự đảo ngược.</p>
+                <div class="controls">
+                    <input type="text" id="input2" placeholder="Nhập các ký tự (ví dụ: c,s,c,2,6,1)" value="c,s,c,2,6,1">
+                    <button id="btnExercise2">Đảo ngược mảng</button>
+                </div>
+                <div class="result" id="result2">Kết quả sẽ hiển thị ở đây</div>
+            </div>
+            
+            <!-- Bài 3 -->
+            <div class="exercise">
+                <div class="exercise-header">
+                    <div class="exercise-number">3</div>
+                    <h2 class="exercise-title">Đếm ký tự số trong mảng</h2>
+                </div>
+                <p class="exercise-description">Viết chương trình khai báo một mảng ký tự và kích thước của mảng. Đếm số ký tự số (0-9) trong mảng.</p>
+                <div class="controls">
+                    <input type="text" id="input3" placeholder="Nhập các ký tự (ví dụ: a,1,b,2,c,3)" value="a,1,b,2,c,3,d,4,e,5,f,6">
+                    <button id="btnExercise3">Đếm ký tự số</button>
+                </div>
+                <div class="result" id="result3">Kết quả sẽ hiển thị ở đây</div>
+            </div>
+            
+            <!-- Bài 4 -->
+            <div class="exercise">
+                <div class="exercise-header">
+                    <div class="exercise-number">4</div>
+                    <h2 class="exercise-title">Đếm số từ trong chuỗi</h2>
+                </div>
+                <p class="exercise-description">Viết chương trình đếm số từ trong một chuỗi.</p>
+                <div class="controls">
+                    <textarea id="input4" rows="3" placeholder="Nhập chuỗi...">JavaScript là ngôn ngữ lập trình phổ biến nhất thế giới</textarea>
+                    <button id="btnExercise4">Đếm số từ</button>
+                </div>
+                <div class="result" id="result4">Kết quả sẽ hiển thị ở đây</div>
+            </div>
+            
+            <!-- Bài 5 -->
+            <div class="exercise">
+                <div class="exercise-header">
+                    <div class="exercise-number">5</div>
+                    <h2 class="exercise-title">So sánh hai chuỗi</h2>
+                </div>
+                <p class="exercise-description">Viết chương trình nhập vào 2 chuỗi, kiểm tra xem hai chuỗi có giống nhau không.</p>
+                <div class="controls">
+                    <input type="text" id="input5a" placeholder="Chuỗi thứ nhất" value="JavaScript">
+                    <input type="text" id="input5b" placeholder="Chuỗi thứ hai" value="javascript">
+                    <button id="btnExercise5">So sánh chuỗi</button>
+                </div>
+                <div class="result" id="result5">Kết quả sẽ hiển thị ở đây</div>
+            </div>
+            
+            <!-- Bài 6 -->
+            <div class="exercise">
+                <div class="exercise-header">
+                    <div class="exercise-number">6</div>
+                    <h2 class="exercise-title">Thay thế ký tự trong mảng</h2>
+                </div>
+                <p class="exercise-description">Viết chương trình nhập vào một mảng ký tự, tìm tất cả các ký tự '-' và thay thế chúng bằng ký tự '_'.</p>
+                <div class="controls">
+                    <input type="text" id="input6" placeholder="Nhập các ký tự (ví dụ: a,-,b,-,c)" value="a,-,b,-,c,d,-,e,-,f">
+                    <button id="btnExercise6">Thay thế ký tự</button>
+                </div>
+                <div class="result" id="result6">Kết quả sẽ hiển thị ở đây</div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>© 2023 - Luyện tập Thao tác với Mảng | HTML, CSS & JavaScript</p>
+        </footer>
+    </div>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Bài 1: In mảng hai chiều
+            document.getElementById('btnExercise1').addEventListener('click', () => {
+                const a = [
+                    [1, 2, 1, 24],
+                    [8, 11, 9, 4],
+                    [7, 0, 7, 27],
+                    [7, 4, 28, 14],
+                    [3, 10, 26, 7]
+                ];
+                
+                let output = "";
+                
+                for (let i = 0; i < a.length; i++) {
+                    output += `row ${i}\n`;
+                    for (let j = 0; j < a[i].length; j++) {
+                        output += ` ${a[i][j]}\n`;
+                    }
+                }
+                
+                document.getElementById('result1').textContent = output;
+            });
+            
+            // Bài 2: Đảo ngược mảng ký tự
+            document.getElementById('btnExercise2').addEventListener('click', () => {
+                const input = document.getElementById('input2').value;
+                const chars = input.split(',').map(c => c.trim());
+                const reversed = [...chars].reverse().join('');
+                document.getElementById('result2').textContent = `Mảng đảo ngược: "${reversed}"`;
+            });
+            
+            // Bài 3: Đếm ký tự số trong mảng
+            document.getElementById('btnExercise3').addEventListener('click', () => {
+                const input = document.getElementById('input3').value;
+                const chars = input.split(',').map(c => c.trim());
+                let digitCount = 0;
+                
+                for (let char of chars) {
+                    if (char.length === 1 && char >= '0' && char <= '9') {
+                        digitCount++;
+                    }
+                }
+                
+                document.getElementById('result3').textContent = 
+                    `Mảng có ${chars.length} ký tự\n` +
+                    `Số ký tự là chữ số (0-9): ${digitCount}`;
+            });
+            
+            // Bài 4: Đếm số từ trong chuỗi
+            document.getElementById('btnExercise4').addEventListener('click', () => {
+                const input = document.getElementById('input4').value;
+                // Loại bỏ khoảng trắng thừa và tách từ
+                const words = input.trim().split(/\s+/).filter(word => word.length > 0);
+                document.getElementById('result4').textContent = 
+                    `Chuỗi: "${input}"\n` +
+                    `Số từ: ${words.length}`;
+            });
+            
+            // Bài 5: So sánh hai chuỗi
+            document.getElementById('btnExercise5').addEventListener('click', () => {
+                const str1 = document.getElementById('input5a').value;
+                const str2 = document.getElementById('input5b').value;
+                
+                if (str1 === str2) {
+                    document.getElementById('result5').innerHTML = 
+                        `<span class="success">Hai chuỗi giống nhau!</span>\n` +
+                        `Chuỗi 1: "${str1}"\n` +
+                        `Chuỗi 2: "${str2}"`;
+                } else {
+                    document.getElementById('result5').innerHTML = 
+                        `<span class="error">Hai chuỗi KHÔNG giống nhau!</span>\n` +
+                        `Chuỗi 1: "${str1}"\n` +
+                        `Chuỗi 2: "${str2}"`;
+                }
+            });
+            
+            // Bài 6: Thay thế ký tự trong mảng
+            document.getElementById('btnExercise6').addEventListener('click', () => {
+                const input = document.getElementById('input6').value;
+                const chars = input.split(',').map(c => c.trim());
+                let replaced = [];
+                
+                for (let char of chars) {
+                    if (char === '-') {
+                        replaced.push('_');
+                    } else {
+                        replaced.push(char);
+                    }
+                }
+                
+                document.getElementById('result6').textContent = 
+                    `Mảng gốc: [${chars.join(', ')}]\n` +
+                    `Mảng sau thay thế: [${replaced.join(', ')}]`;
+            });
+            
+            // Khởi tạo bài tập mẫu
+            document.querySelectorAll('button[id^="btnExercise"]').forEach(btn => {
+                btn.click();
+            });
+        });
+    </script>
+</body>
+</html>
