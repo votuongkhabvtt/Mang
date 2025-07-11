@@ -1,1 +1,549 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chèn Dấu "-" Giữa Các Số Chẵn</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 700px;
+            padding: 30px;
+            transition: all 0.3s ease;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 2.3rem;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+            background: linear-gradient(45deg, #1a2a6c, #b21f1f);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .description {
+            text-align: center;
+            color: #7f8c8d;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+        
+        .input-group {
+            display: flex;
+            margin-bottom: 20px;
+        }
+        
+        #numberInput {
+            flex: 1;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 10px 0 0 10px;
+            font-size: 1.1rem;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        
+        #numberInput:focus {
+            border-color: #1a2a6c;
+        }
+        
+        #addButton {
+            background: #1a2a6c;
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 0 10px 10px 0;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+        
+        #addButton:hover {
+            background: #0d1a4a;
+        }
+        
+        .array-container {
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 25px;
+            min-height: 100px;
+            border: 2px dashed #e9ecef;
+        }
+        
+        .array-title {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .array-title span {
+            background: #1a2a6c;
+            color: white;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 10px;
+            font-size: 1rem;
+        }
+        
+        #arrayElements {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            min-height: 50px;
+        }
+        
+        .element {
+            background: linear-gradient(135deg, #1a2a6c, #4a6491);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
+            animation: fadeIn 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .element::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(-100%);
+            transition: transform 0.3s;
+        }
+        
+        .element:hover::before {
+            transform: translateX(0);
+        }
+        
+        .element .index {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 8px;
+            font-size: 0.9rem;
+        }
+        
+        .element .delete {
+            margin-left: 10px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: transform 0.2s;
+            padding: 0 5px;
+        }
+        
+        .element .delete:hover {
+            transform: scale(1.2);
+            color: #ff9999;
+        }
+        
+        .actions {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .btn {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
+        }
+        
+        .btn i {
+            margin-right: 8px;
+            font-size: 1.2rem;
+        }
+        
+        #processButton {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f);
+            color: white;
+        }
+        
+        #processButton:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 7px 14px rgba(50, 50, 93, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08);
+        }
+        
+        #clearButton {
+            background: linear-gradient(135deg, #333, #555);
+            color: white;
+        }
+        
+        #clearButton:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 7px 14px rgba(50, 50, 93, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08);
+        }
+        
+        .result-container {
+            background: linear-gradient(to right, #1a2a6c, #4a6491);
+            color: white;
+            border-radius: 10px;
+            padding: 25px;
+            margin-top: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .result-title {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+        }
+        
+        .result-title i {
+            margin-right: 10px;
+            font-size: 1.6rem;
+            color: #ffcc00;
+        }
+        
+        #result {
+            font-size: 1.8rem;
+            min-height: 60px;
+            word-break: break-all;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+        
+        .even-group {
+            background: rgba(255, 215, 0, 0.3);
+            padding: 2px 8px;
+            border-radius: 4px;
+            display: inline-flex;
+            align-items: center;
+        }
+        
+        .dash {
+            color: #ffcc00;
+            font-weight: bold;
+        }
+        
+        .empty-array {
+            color: #95a5a6;
+            font-style: italic;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .instructions {
+            background-color: #e3f2fd;
+            border-left: 4px solid #1a2a6c;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .instructions h3 {
+            color: #1a2a6c;
+            margin-bottom: 10px;
+        }
+        
+        .instructions ul {
+            padding-left: 20px;
+        }
+        
+        .instructions li {
+            margin-bottom: 8px;
+            color: #555;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        @media (max-width: 600px) {
+            .input-group {
+                flex-direction: column;
+            }
+            
+            #numberInput {
+                border-radius: 10px;
+                margin-bottom: 10px;
+            }
+            
+            #addButton {
+                border-radius: 10px;
+                padding: 12px;
+            }
+            
+            .actions {
+                flex-direction: column;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>CHÈN DẤU "-" GIỮA CÁC SỐ CHẴN</h1>
+        <p class="description">Nhập các số nguyên vào mảng, sau đó nhấn nút "Xử lý" để chèn dấu "-" giữa các số chẵn liền kề</p>
+        
+        <div class="instructions">
+            <h3>Hướng dẫn sử dụng:</h3>
+            <ul>
+                <li>Nhập số nguyên vào ô bên dưới và nhấn nút <strong>Thêm Số</strong> hoặc phím <strong>Enter</strong></li>
+                <li>Các số đã nhập sẽ hiển thị trong khung "Mảng hiện tại"</li>
+                <li>Nhấn nút <strong>Xử lý Mảng</strong> để chèn dấu "-" giữa các số chẵn liền kề</li>
+                <li>Kết quả sẽ hiển thị ở khung "Kết quả xử lý"</li>
+                <li>Nhấn nút <strong>Xóa Mảng</strong> để bắt đầu lại</li>
+            </ul>
+        </div>
+        
+        <div class="input-group">
+            <input type="number" id="numberInput" placeholder="Nhập số nguyên...">
+            <button id="addButton">Thêm Số</button>
+        </div>
+        
+        <div class="array-container">
+            <div class="array-title">
+                <span id="elementCount">0</span> Số trong mảng:
+            </div>
+            <div id="arrayElements" class="elements-list">
+                <div class="empty-array">Chưa có số nào trong mảng</div>
+            </div>
+        </div>
+        
+        <div class="actions">
+            <button id="processButton" class="btn"><i>⚡</i> Xử lý Mảng</button>
+            <button id="clearButton" class="btn"><i>🗑️</i> Xóa Mảng</button>
+        </div>
+        
+        <div class="result-container">
+            <div class="result-title"><i>🔍</i> Kết quả xử lý:</div>
+            <div id="result">Chưa có kết quả</div>
+        </div>
+    </div>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Khai báo mảng để lưu trữ các số
+            let array = [];
+            
+            // Tham chiếu đến các phần tử DOM
+            const numberInput = document.getElementById('numberInput');
+            const addButton = document.getElementById('addButton');
+            const arrayElements = document.getElementById('arrayElements');
+            const elementCount = document.getElementById('elementCount');
+            const processButton = document.getElementById('processButton');
+            const clearButton = document.getElementById('clearButton');
+            const resultDisplay = document.getElementById('result');
+            
+            // Hàm thêm số vào mảng
+            function addNumber() {
+                const value = numberInput.value.trim();
+                
+                if (value) {
+                    // Chuyển giá trị thành số nguyên
+                    const number = parseInt(value);
+                    
+                    // Thêm số vào mảng
+                    array.push(number);
+                    
+                    // Cập nhật giao diện
+                    updateArrayDisplay();
+                    
+                    // Reset input
+                    numberInput.value = '';
+                    numberInput.focus();
+                }
+            }
+            
+            // Hàm cập nhật hiển thị mảng
+            function updateArrayDisplay() {
+                // Cập nhật số lượng phần tử
+                elementCount.textContent = array.length;
+                
+                // Xóa nội dung hiện tại
+                arrayElements.innerHTML = '';
+                
+                // Hiển thị thông báo nếu mảng rỗng
+                if (array.length === 0) {
+                    arrayElements.innerHTML = '<div class="empty-array">Chưa có số nào trong mảng</div>';
+                    return;
+                }
+                
+                // Hiển thị từng phần tử
+                array.forEach((number, index) => {
+                    const elementDiv = document.createElement('div');
+                    elementDiv.className = 'element';
+                    
+                    // Đánh dấu số chẵn
+                    const isEven = number % 2 === 0;
+                    if (isEven) {
+                        elementDiv.style.background = 'linear-gradient(135deg, #1a2a6c, #b21f1f)';
+                    }
+                    
+                    elementDiv.innerHTML = `
+                        <span class="index">${index}</span>
+                        ${number}
+                        <span class="delete" data-index="${index}">×</span>
+                    `;
+                    arrayElements.appendChild(elementDiv);
+                });
+                
+                // Thêm sự kiện xóa cho các nút delete
+                document.querySelectorAll('.element .delete').forEach(button => {
+                    button.addEventListener('click', (e) => {
+                        const index = parseInt(e.target.getAttribute('data-index'));
+                        array.splice(index, 1);
+                        updateArrayDisplay();
+                    });
+                });
+            }
+            
+            // Hàm xử lý chèn dấu "-" giữa các số chẵn liền kề
+            function processArray() {
+                if (array.length === 0) {
+                    resultDisplay.textContent = "Mảng rỗng! Hãy thêm số trước khi xử lý.";
+                    return;
+                }
+                
+                // Tạo một mảng mới để lưu kết quả
+                const resultArray = [];
+                
+                // Duyệt qua từng phần tử trong mảng
+                for (let i = 0; i < array.length; i++) {
+                    // Thêm số hiện tại vào kết quả
+                    resultArray.push(array[i]);
+                    
+                    // Kiểm tra nếu số hiện tại và số tiếp theo đều chẵn
+                    if (i < array.length - 1 && array[i] % 2 === 0 && array[i+1] % 2 === 0) {
+                        // Chèn dấu "-" giữa hai số chẵn
+                        resultArray.push("-");
+                    }
+                }
+                
+                // Hiển thị kết quả
+                displayResult(resultArray);
+            }
+            
+            // Hàm hiển thị kết quả
+            function displayResult(resultArray) {
+                resultDisplay.innerHTML = '';
+                
+                resultArray.forEach((item, index) => {
+                    const element = document.createElement('span');
+                    
+                    if (typeof item === 'number') {
+                        if (item % 2 === 0) {
+                            const group = document.createElement('span');
+                            group.className = 'even-group';
+                            group.textContent = item;
+                            resultDisplay.appendChild(group);
+                        } else {
+                            element.textContent = item;
+                            resultDisplay.appendChild(element);
+                        }
+                    } else {
+                        const dash = document.createElement('span');
+                        dash.className = 'dash';
+                        dash.textContent = ' - ';
+                        resultDisplay.appendChild(dash);
+                    }
+                    
+                    // Thêm dấu cách nếu không phải là phần tử cuối cùng và không phải dấu "-"
+                    if (index < resultArray.length - 1 && typeof resultArray[index + 1] !== 'string') {
+                        resultDisplay.appendChild(document.createTextNode(' '));
+                    }
+                });
+                
+                // Thêm hiệu ứng
+                resultDisplay.style.animation = 'pulse 0.5s';
+                setTimeout(() => {
+                    resultDisplay.style.animation = '';
+                }, 500);
+            }
+            
+            // Hàm xóa toàn bộ mảng
+            function clearArray() {
+                array = [];
+                updateArrayDisplay();
+                resultDisplay.innerHTML = "Chưa có kết quả";
+            }
+            
+            // Thêm sự kiện khi nhấn nút "Thêm"
+            addButton.addEventListener('click', addNumber);
+            
+            // Thêm sự kiện khi nhấn Enter trong ô input
+            numberInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    addNumber();
+                }
+            });
+            
+            // Thêm sự kiện khi nhấn nút "Xử lý"
+            processButton.addEventListener('click', processArray);
+            
+            // Thêm sự kiện khi nhấn nút "Xóa Mảng"
+            clearButton.addEventListener('click', clearArray);
+            
+            // Khởi tạo hiển thị
+            updateArrayDisplay();
+        });
+    </script>
+</body>
+</html>
