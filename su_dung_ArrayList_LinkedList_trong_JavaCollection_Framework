@@ -1,1 +1,719 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý Sản phẩm</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: #333;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(to right, #1e3c72, #2a5298);
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .main-content {
+            display: flex;
+            padding: 20px;
+        }
+        
+        .form-section {
+            flex: 1;
+            padding: 20px;
+            border-right: 1px solid #eee;
+        }
+        
+        .list-section {
+            flex: 2;
+            padding: 20px;
+        }
+        
+        .panel {
+            background: #f8f9ff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 25px;
+        }
+        
+        .panel-title {
+            font-size: 1.4rem;
+            color: #1e3c72;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #1e3c72;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #1e3c72;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d0d0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 25px;
+        }
+        
+        button {
+            flex: 1;
+            background: linear-gradient(to right, #1e3c72, #2a5298);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+        
+        button:active {
+            transform: translateY(1px);
+        }
+        
+        .btn-danger {
+            background: linear-gradient(to right, #c31432, #240b36);
+        }
+        
+        .btn-warning {
+            background: linear-gradient(to right, #ff9800, #f57c00);
+        }
+        
+        .btn-success {
+            background: linear-gradient(to right, #2ecc71, #27ae60);
+        }
+        
+        .search-sort {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .search-box {
+            flex: 2;
+            display: flex;
+        }
+        
+        .search-box input {
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+        
+        .search-box button {
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+            max-width: 120px;
+        }
+        
+        .sort-options {
+            flex: 1;
+            display: flex;
+            gap: 10px;
+        }
+        
+        .sort-options button {
+            padding: 10px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        th, td {
+            border: 1px solid #e0e0e0;
+            padding: 15px;
+            text-align: left;
+        }
+        
+        th {
+            background: #1e3c72;
+            color: white;
+            font-weight: 600;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f8f9ff;
+        }
+        
+        tr:hover {
+            background-color: #e3f2fd;
+        }
+        
+        .message {
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-weight: 500;
+            text-align: center;
+        }
+        
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        
+        .collection-toggle {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .collection-toggle button {
+            max-width: 200px;
+        }
+        
+        .active-collection {
+            box-shadow: 0 0 0 3px #ff9800;
+        }
+        
+        footer {
+            background: #1e3c72;
+            color: white;
+            text-align: center;
+            padding: 15px;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 900px) {
+            .main-content {
+                flex-direction: column;
+            }
+            
+            .form-section {
+                border-right: none;
+                border-bottom: 1px solid #eee;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Quản lý Sản phẩm</h1>
+            <p class="subtitle">Sử dụng ArrayList và LinkedList trong Java Collection Framework</p>
+        </header>
+        
+        <div class="collection-toggle">
+            <button id="btnArrayList" class="active-collection">Sử dụng ArrayList</button>
+            <button id="btnLinkedList">Sử dụng LinkedList</button>
+        </div>
+        
+        <div class="main-content">
+            <div class="form-section">
+                <div class="panel">
+                    <h2 class="panel-title">Thông tin sản phẩm</h2>
+                    
+                    <div class="form-group">
+                        <label for="productId">Mã sản phẩm (ID):</label>
+                        <input type="text" id="productId" placeholder="Nhập ID sản phẩm">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="productName">Tên sản phẩm:</label>
+                        <input type="text" id="productName" placeholder="Nhập tên sản phẩm">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="productPrice">Giá sản phẩm:</label>
+                        <input type="number" id="productPrice" placeholder="Nhập giá sản phẩm">
+                    </div>
+                    
+                    <div class="btn-group">
+                        <button id="btnAdd">Thêm</button>
+                        <button id="btnUpdate" class="btn-warning">Cập nhật</button>
+                        <button id="btnDelete" class="btn-danger">Xóa</button>
+                    </div>
+                    
+                    <div class="btn-group">
+                        <button id="btnClear">Nhập lại</button>
+                    </div>
+                </div>
+                
+                <div class="panel">
+                    <h2 class="panel-title">Thông tin ứng dụng</h2>
+                    <p>Ứng dụng này minh họa việc sử dụng ArrayList và LinkedList trong Java Collection Framework để quản lý sản phẩm.</p>
+                    <p><strong>Các chức năng:</strong></p>
+                    <ul style="margin: 15px 0 15px 20px;">
+                        <li>Thêm sản phẩm</li>
+                        <li>Sửa thông tin sản phẩm theo ID</li>
+                        <li>Xóa sản phẩm theo ID</li>
+                        <li>Tìm kiếm sản phẩm theo tên</li>
+                        <li>Sắp xếp sản phẩm tăng/giảm dần theo giá</li>
+                    </ul>
+                    <p><strong>Hướng dẫn:</strong></p>
+                    <ol style="margin: 15px 0 15px 20px;">
+                        <li>Chọn loại collection (ArrayList hoặc LinkedList)</li>
+                        <li>Nhập thông tin sản phẩm và thực hiện các thao tác</li>
+                    </ol>
+                </div>
+            </div>
+            
+            <div class="list-section">
+                <div class="panel">
+                    <h2 class="panel-title">Danh sách sản phẩm</h2>
+                    
+                    <div class="search-sort">
+                        <div class="search-box">
+                            <input type="text" id="searchInput" placeholder="Tìm kiếm theo tên sản phẩm...">
+                            <button id="btnSearch">Tìm kiếm</button>
+                        </div>
+                        <div class="sort-options">
+                            <button id="btnSortAsc" class="btn-success">Giá tăng dần</button>
+                            <button id="btnSortDesc" class="btn-warning">Giá giảm dần</button>
+                        </div>
+                    </div>
+                    
+                    <div id="messageArea"></div>
+                    
+                    <table id="productTable">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Tên sản phẩm</th>
+                                <th>Giá (VND)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="productList">
+                            <!-- Danh sách sản phẩm sẽ được thêm ở đây -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>© 2023 - Ứng dụng Quản lý Sản phẩm | Sử dụng ArrayList và LinkedList</p>
+        </footer>
+    </div>
 
+    <script>
+        // Lớp Product
+        class Product {
+            constructor(id, name, price) {
+                this.id = id;
+                this.name = name;
+                this.price = price;
+            }
+            
+            toString() {
+                return `Product{id=${this.id}, name='${this.name}', price=${this.price}}`;
+            }
+        }
+
+        // Lớp ProductManager sử dụng ArrayList
+        class ProductManagerArrayList {
+            constructor() {
+                this.products = []; // ArrayList
+            }
+            
+            // Thêm sản phẩm
+            addProduct(product) {
+                // Kiểm tra trùng ID
+                if (this.products.some(p => p.id === product.id)) {
+                    return false;
+                }
+                this.products.push(product);
+                return true;
+            }
+            
+            // Sửa sản phẩm theo ID
+            updateProduct(id, newProduct) {
+                const index = this.products.findIndex(p => p.id === id);
+                if (index !== -1) {
+                    this.products[index] = newProduct;
+                    return true;
+                }
+                return false;
+            }
+            
+            // Xóa sản phẩm theo ID
+            removeProduct(id) {
+                const index = this.products.findIndex(p => p.id === id);
+                if (index !== -1) {
+                    this.products.splice(index, 1);
+                    return true;
+                }
+                return false;
+            }
+            
+            // Lấy tất cả sản phẩm
+            getAllProducts() {
+                return [...this.products];
+            }
+            
+            // Tìm kiếm sản phẩm theo tên
+            searchByName(name) {
+                const searchTerm = name.toLowerCase();
+                return this.products.filter(p => 
+                    p.name.toLowerCase().includes(searchTerm)
+                );
+            }
+            
+            // Sắp xếp tăng dần theo giá
+            sortAscendingByPrice() {
+                this.products.sort((a, b) => a.price - b.price);
+            }
+            
+            // Sắp xếp giảm dần theo giá
+            sortDescendingByPrice() {
+                this.products.sort((a, b) => b.price - a.price);
+            }
+        }
+
+        // Lớp ProductManager sử dụng LinkedList
+        class ProductManagerLinkedList {
+            constructor() {
+                this.products = []; // LinkedList (sử dụng mảng để mô phỏng)
+            }
+            
+            // Thêm sản phẩm
+            addProduct(product) {
+                // Kiểm tra trùng ID
+                if (this.products.some(p => p.id === product.id)) {
+                    return false;
+                }
+                this.products.push(product);
+                return true;
+            }
+            
+            // Sửa sản phẩm theo ID
+            updateProduct(id, newProduct) {
+                const index = this.products.findIndex(p => p.id === id);
+                if (index !== -1) {
+                    this.products[index] = newProduct;
+                    return true;
+                }
+                return false;
+            }
+            
+            // Xóa sản phẩm theo ID
+            removeProduct(id) {
+                const index = this.products.findIndex(p => p.id === id);
+                if (index !== -1) {
+                    this.products.splice(index, 1);
+                    return true;
+                }
+                return false;
+            }
+            
+            // Lấy tất cả sản phẩm
+            getAllProducts() {
+                return [...this.products];
+            }
+            
+            // Tìm kiếm sản phẩm theo tên
+            searchByName(name) {
+                const searchTerm = name.toLowerCase();
+                return this.products.filter(p => 
+                    p.name.toLowerCase().includes(searchTerm)
+                );
+            }
+            
+            // Sắp xếp tăng dần theo giá
+            sortAscendingByPrice() {
+                this.products.sort((a, b) => a.price - b.price);
+            }
+            
+            // Sắp xếp giảm dần theo giá
+            sortDescendingByPrice() {
+                this.products.sort((a, b) => b.price - a.price);
+            }
+        }
+
+        // Khởi tạo ứng dụng
+        document.addEventListener('DOMContentLoaded', () => {
+            // Khởi tạo product manager
+            let productManager = new ProductManagerArrayList();
+            let currentCollection = 'ArrayList';
+            
+            // Tham chiếu đến các phần tử HTML
+            const productIdInput = document.getElementById('productId');
+            const productNameInput = document.getElementById('productName');
+            const productPriceInput = document.getElementById('productPrice');
+            const btnAdd = document.getElementById('btnAdd');
+            const btnUpdate = document.getElementById('btnUpdate');
+            const btnDelete = document.getElementById('btnDelete');
+            const btnClear = document.getElementById('btnClear');
+            const btnSearch = document.getElementById('btnSearch');
+            const searchInput = document.getElementById('searchInput');
+            const btnSortAsc = document.getElementById('btnSortAsc');
+            const btnSortDesc = document.getElementById('btnSortDesc');
+            const productList = document.getElementById('productList');
+            const messageArea = document.getElementById('messageArea');
+            const btnArrayList = document.getElementById('btnArrayList');
+            const btnLinkedList = document.getElementById('btnLinkedList');
+            const productTable = document.getElementById('productTable');
+            
+            // Hiển thị danh sách sản phẩm
+            function displayProducts(products) {
+                productList.innerHTML = '';
+                
+                if (products.length === 0) {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `<td colspan="3" style="text-align: center;">Không có sản phẩm nào</td>`;
+                    productList.appendChild(row);
+                    return;
+                }
+                
+                products.forEach(product => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${product.id}</td>
+                        <td>${product.name}</td>
+                        <td>${product.price.toLocaleString()} VND</td>
+                    `;
+                    productList.appendChild(row);
+                });
+            }
+            
+            // Hiển thị thông báo
+            function showMessage(message, type = 'info') {
+                messageArea.innerHTML = `<div class="message ${type}">${message}</div>`;
+                
+                // Tự động ẩn thông báo sau 3 giây
+                setTimeout(() => {
+                    messageArea.innerHTML = '';
+                }, 3000);
+            }
+            
+            // Reset form
+            function resetForm() {
+                productIdInput.value = '';
+                productNameInput.value = '';
+                productPriceInput.value = '';
+                productIdInput.focus();
+            }
+            
+            // Thêm sản phẩm
+            btnAdd.addEventListener('click', () => {
+                const id = productIdInput.value.trim();
+                const name = productNameInput.value.trim();
+                const price = parseFloat(productPriceInput.value);
+                
+                if (!id || !name || isNaN(price)) {
+                    showMessage('Vui lòng nhập đầy đủ thông tin sản phẩm!', 'error');
+                    return;
+                }
+                
+                const product = new Product(id, name, price);
+                if (productManager.addProduct(product)) {
+                    displayProducts(productManager.getAllProducts());
+                    showMessage(`Đã thêm sản phẩm "${name}" thành công!`, 'success');
+                    resetForm();
+                } else {
+                    showMessage(`ID "${id}" đã tồn tại! Vui lòng nhập ID khác.`, 'error');
+                }
+            });
+            
+            // Cập nhật sản phẩm
+            btnUpdate.addEventListener('click', () => {
+                const id = productIdInput.value.trim();
+                const name = productNameInput.value.trim();
+                const price = parseFloat(productPriceInput.value);
+                
+                if (!id || !name || isNaN(price)) {
+                    showMessage('Vui lòng nhập đầy đủ thông tin sản phẩm!', 'error');
+                    return;
+                }
+                
+                const newProduct = new Product(id, name, price);
+                if (productManager.updateProduct(id, newProduct)) {
+                    displayProducts(productManager.getAllProducts());
+                    showMessage(`Đã cập nhật sản phẩm "${name}" thành công!`, 'success');
+                    resetForm();
+                } else {
+                    showMessage(`Không tìm thấy sản phẩm với ID "${id}"!`, 'error');
+                }
+            });
+            
+            // Xóa sản phẩm
+            btnDelete.addEventListener('click', () => {
+                const id = productIdInput.value.trim();
+                
+                if (!id) {
+                    showMessage('Vui lòng nhập ID sản phẩm cần xóa!', 'error');
+                    return;
+                }
+                
+                if (productManager.removeProduct(id)) {
+                    displayProducts(productManager.getAllProducts());
+                    showMessage(`Đã xóa sản phẩm với ID "${id}" thành công!`, 'success');
+                    resetForm();
+                } else {
+                    showMessage(`Không tìm thấy sản phẩm với ID "${id}"!`, 'error');
+                }
+            });
+            
+            // Tìm kiếm sản phẩm
+            btnSearch.addEventListener('click', () => {
+                const searchTerm = searchInput.value.trim();
+                
+                if (!searchTerm) {
+                    displayProducts(productManager.getAllProducts());
+                    showMessage('Vui lòng nhập tên sản phẩm cần tìm!', 'error');
+                    return;
+                }
+                
+                const results = productManager.searchByName(searchTerm);
+                displayProducts(results);
+                
+                if (results.length > 0) {
+                    showMessage(`Tìm thấy ${results.length} sản phẩm phù hợp với "${searchTerm}"`, 'success');
+                } else {
+                    showMessage(`Không tìm thấy sản phẩm nào phù hợp với "${searchTerm}"`, 'info');
+                }
+            });
+            
+            // Sắp xếp tăng dần
+            btnSortAsc.addEventListener('click', () => {
+                productManager.sortAscendingByPrice();
+                displayProducts(productManager.getAllProducts());
+                showMessage('Đã sắp xếp sản phẩm theo giá tăng dần', 'success');
+            });
+            
+            // Sắp xếp giảm dần
+            btnSortDesc.addEventListener('click', () => {
+                productManager.sortDescendingByPrice();
+                displayProducts(productManager.getAllProducts());
+                showMessage('Đã sắp xếp sản phẩm theo giá giảm dần', 'success');
+            });
+            
+            // Reset form
+            btnClear.addEventListener('click', resetForm);
+            
+            // Chuyển đổi giữa ArrayList và LinkedList
+            btnArrayList.addEventListener('click', () => {
+                if (currentCollection !== 'ArrayList') {
+                    // Lưu trữ dữ liệu hiện tại
+                    const currentProducts = productManager.getAllProducts();
+                    
+                    // Chuyển sang ArrayList
+                    productManager = new ProductManagerArrayList();
+                    currentProducts.forEach(p => productManager.addProduct(p));
+                    
+                    // Cập nhật giao diện
+                    displayProducts(productManager.getAllProducts());
+                    currentCollection = 'ArrayList';
+                    
+                    // Cập nhật nút
+                    btnArrayList.classList.add('active-collection');
+                    btnLinkedList.classList.remove('active-collection');
+                    
+                    showMessage('Đã chuyển sang sử dụng ArrayList', 'info');
+                }
+            });
+            
+            btnLinkedList.addEventListener('click', () => {
+                if (currentCollection !== 'LinkedList') {
+                    // Lưu trữ dữ liệu hiện tại
+                    const currentProducts = productManager.getAllProducts();
+                    
+                    // Chuyển sang LinkedList
+                    productManager = new ProductManagerLinkedList();
+                    currentProducts.forEach(p => productManager.addProduct(p));
+                    
+                    // Cập nhật giao diện
+                    displayProducts(productManager.getAllProducts());
+                    currentCollection = 'LinkedList';
+                    
+                    // Cập nhật nút
+                    btnLinkedList.classList.add('active-collection');
+                    btnArrayList.classList.remove('active-collection');
+                    
+                    showMessage('Đã chuyển sang sử dụng LinkedList', 'info');
+                }
+            });
+            
+            // Thêm dữ liệu mẫu
+            function addSampleData() {
+                const sampleProducts = [
+                    new Product('P001', 'iPhone 14 Pro Max', 32990000),
+                    new Product('P002', 'Samsung Galaxy S23 Ultra', 30990000),
+                    new Product('P003', 'MacBook Pro M2', 42990000),
+                    new Product('P004', 'iPad Pro 12.9 inch', 24990000),
+                    new Product('P005', 'Apple Watch Ultra', 18990000),
+                    new Product('P006', 'Sony WH-1000XM5', 7990000),
+                    new Product('P007', 'Dell XPS 13', 34990000),
+                    new Product('P008', 'Google Pixel 7 Pro', 21990000)
+                ];
+                
+                sampleProducts.forEach(p => productManager.addProduct(p));
+                displayProducts(productManager.getAllProducts());
+            }
+            
+            // Khởi tạo dữ liệu
+            addSampleData();
+        });
+    </script>
+</body>
+</html>
