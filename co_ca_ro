@@ -1,1 +1,374 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trò chơi Cờ Caro</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            padding: 20px;
+        }
+        
+        .container {
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            padding: 30px;
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+        }
+        
+        h1 {
+            color: #1a2a6c;
+            margin-bottom: 20px;
+            font-size: 2.5rem;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+        
+        .subtitle {
+            color: #b21f1f;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+        }
+        
+        .game-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            background-color: #f0f4ff;
+            padding: 15px;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+        
+        .player-turn {
+            color: #1a2a6c;
+            font-size: 1.2rem;
+        }
+        
+        .board {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-gap: 8px;
+            margin: 20px auto;
+            max-width: 400px;
+        }
+        
+        .cell {
+            background-color: #fff;
+            border: 2px solid #1a2a6c;
+            border-radius: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 3rem;
+            font-weight: bold;
+            cursor: pointer;
+            height: 100px;
+            transition: all 0.3s ease;
+        }
+        
+        .cell:hover {
+            background-color: #f0f4ff;
+            transform: scale(1.05);
+        }
+        
+        .cell.X {
+            color: #b21f1f;
+        }
+        
+        .cell.O {
+            color: #1a2a6c;
+        }
+        
+        .controls {
+            margin-top: 25px;
+        }
+        
+        button {
+            background: linear-gradient(to right, #1a2a6c, #b21f1f);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 12px 25px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+        
+        button:active {
+            transform: translateY(1px);
+        }
+        
+        .message {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .win {
+            background-color: #d4edda;
+            color: #155724;
+            animation: pulse 1s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+        
+        .instructions {
+            background-color: #f8f9fa;
+            border-left: 4px solid #1a2a6c;
+            padding: 15px;
+            margin-top: 25px;
+            text-align: left;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .instructions h3 {
+            color: #1a2a6c;
+            margin-bottom: 10px;
+        }
+        
+        .instructions ul {
+            padding-left: 20px;
+        }
+        
+        .instructions li {
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+        
+        .footer {
+            margin-top: 20px;
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>CỜ CARO</h1>
+        <p class="subtitle">Chơi cờ Caro đơn giản - Ai sẽ là người chiến thắng?</p>
+        
+        <div class="game-info">
+            <div class="player-turn">Lượt chơi: <span id="current-player">X</span></div>
+            <div class="player-turn">Lượt: <span id="move-count">0</span></div>
+        </div>
+        
+        <div class="board" id="board">
+            <!-- Ô cờ sẽ được tạo bằng JavaScript -->
+        </div>
+        
+        <div class="message" id="message">
+            Chào mừng! Người chơi X bắt đầu.
+        </div>
+        
+        <div class="controls">
+            <button id="reset-btn">Chơi lại</button>
+        </div>
+        
+        <div class="instructions">
+            <h3>Cách chơi:</h3>
+            <ul>
+                <li>Có 2 người chơi, lần lượt nhập dấu X và O</li>
+                <li>Người chơi X luôn bắt đầu trước</li>
+                <li>Chiến thắng khi có 3 ô liên tiếp giống nhau theo hàng ngang, dọc hoặc đường chéo</li>
+                <li>Nếu tất cả các ô đã điền mà không có người thắng, trò chơi hòa</li>
+            </ul>
+        </div>
+        
+        <div class="footer">
+            Trò chơi Cờ Caro - Sử dụng HTML, CSS và JavaScript
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const boardElement = document.getElementById('board');
+            const messageElement = document.getElementById('message');
+            const currentPlayerElement = document.getElementById('current-player');
+            const moveCountElement = document.getElementById('move-count');
+            const resetButton = document.getElementById('reset-btn');
+            
+            // Kích thước bàn cờ
+            const BOARD_SIZE = 3;
+            
+            // Trạng thái ban đầu
+            let board = [];
+            let currentPlayer = 'X';
+            let gameActive = true;
+            let moveCount = 0;
+            
+            // Khởi tạo bàn cờ
+            function initializeBoard() {
+                board = [];
+                for (let i = 0; i < BOARD_SIZE; i++) {
+                    board[i] = [];
+                    for (let j = 0; j < BOARD_SIZE; j++) {
+                        board[i][j] = '.';
+                    }
+                }
+                
+                // Hiển thị bàn cờ
+                renderBoard();
+                
+                // Đặt lại trạng thái trò chơi
+                currentPlayer = 'X';
+                gameActive = true;
+                moveCount = 0;
+                
+                // Cập nhật UI
+                currentPlayerElement.textContent = currentPlayer;
+                moveCountElement.textContent = moveCount;
+                messageElement.textContent = "Chào mừng! Người chơi X bắt đầu.";
+                messageElement.className = "message";
+            }
+            
+            // Hiển thị bàn cờ
+            function renderBoard() {
+                boardElement.innerHTML = '';
+                
+                for (let i = 0; i < BOARD_SIZE; i++) {
+                    for (let j = 0; j < BOARD_SIZE; j++) {
+                        const cell = document.createElement('div');
+                        cell.classList.add('cell');
+                        
+                        // Hiển thị ký tự tương ứng
+                        if (board[i][j] === 'X' || board[i][j] === 'O') {
+                            cell.textContent = board[i][j];
+                            cell.classList.add(board[i][j]);
+                        } else {
+                            cell.textContent = '.';
+                        }
+                        
+                        cell.dataset.row = i;
+                        cell.dataset.col = j;
+                        
+                        cell.addEventListener('click', () => handleCellClick(i, j));
+                        boardElement.appendChild(cell);
+                    }
+                }
+            }
+            
+            // Xử lý khi click vào ô
+            function handleCellClick(row, col) {
+                if (!gameActive || board[row][col] !== '.') {
+                    return;
+                }
+                
+                // Đặt dấu cho ô
+                board[row][col] = currentPlayer;
+                moveCount++;
+                
+                // Cập nhật UI
+                renderBoard();
+                moveCountElement.textContent = moveCount;
+                
+                // Kiểm tra chiến thắng
+                if (checkWin(row, col)) {
+                    messageElement.textContent = `Người chơi ${currentPlayer} chiến thắng! 🎉`;
+                    messageElement.classList.add('win');
+                    gameActive = false;
+                    return;
+                }
+                
+                // Kiểm tra hòa
+                if (moveCount === BOARD_SIZE * BOARD_SIZE) {
+                    messageElement.textContent = "Trò chơi hòa! 🤝";
+                    messageElement.classList.add('win');
+                    gameActive = false;
+                    return;
+                }
+                
+                // Chuyển lượt chơi
+                currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+                currentPlayerElement.textContent = currentPlayer;
+                messageElement.textContent = `Lượt người chơi ${currentPlayer}`;
+            }
+            
+            // Kiểm tra chiến thắng
+            function checkWin(row, col) {
+                const player = board[row][col];
+                
+                // Kiểm tra hàng ngang
+                let winHorizontal = true;
+                for (let j = 0; j < BOARD_SIZE; j++) {
+                    if (board[row][j] !== player) {
+                        winHorizontal = false;
+                        break;
+                    }
+                }
+                
+                // Kiểm tra hàng dọc
+                let winVertical = true;
+                for (let i = 0; i < BOARD_SIZE; i++) {
+                    if (board[i][col] !== player) {
+                        winVertical = false;
+                        break;
+                    }
+                }
+                
+                // Kiểm tra đường chéo chính
+                let winDiagonal1 = (row === col);
+                if (winDiagonal1) {
+                    for (let i = 0; i < BOARD_SIZE; i++) {
+                        if (board[i][i] !== player) {
+                            winDiagonal1 = false;
+                            break;
+                        }
+                    }
+                }
+                
+                // Kiểm tra đường chéo phụ
+                let winDiagonal2 = (row + col === BOARD_SIZE - 1);
+                if (winDiagonal2) {
+                    for (let i = 0; i < BOARD_SIZE; i++) {
+                        if (board[i][BOARD_SIZE - 1 - i] !== player) {
+                            winDiagonal2 = false;
+                            break;
+                        }
+                    }
+                }
+                
+                return winHorizontal || winVertical || winDiagonal1 || winDiagonal2;
+            }
+            
+            // Xử lý nút reset
+            resetButton.addEventListener('click', initializeBoard);
+            
+            // Khởi tạo trò chơi
+            initializeBoard();
+        });
+    </script>
+</body>
+</html>
 
