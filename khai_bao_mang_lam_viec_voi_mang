@@ -1,1 +1,563 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thao tác với Mảng trong JavaScript</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: #333;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            padding: 30px 0;
+            color: white;
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .exercises-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .exercise {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            padding: 25px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .exercise:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .exercise-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        .exercise-number {
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-right: 15px;
+        }
+        
+        .exercise-title {
+            font-size: 1.4rem;
+            color: #1e3c72;
+        }
+        
+        .exercise-description {
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .array-display {
+            background: #f8f9ff;
+            border: 1px solid #d0d0e0;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            min-height: 60px;
+        }
+        
+        button {
+            background: linear-gradient(to right, #1e3c72, #2a5298);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 10px 20px;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+        }
+        
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+        
+        button:active {
+            transform: translateY(1px);
+        }
+        
+        input {
+            padding: 10px 15px;
+            border: 1px solid #d0d0e0;
+            border-radius: 50px;
+            font-size: 1rem;
+            width: 100px;
+            text-align: center;
+        }
+        
+        .result {
+            background: #e3f2fd;
+            border-left: 4px solid #1e88e5;
+            padding: 15px;
+            border-radius: 0 8px 8px 0;
+            margin-top: 15px;
+            font-size: 1.1rem;
+            min-height: 60px;
+        }
+        
+        .highlight {
+            background-color: #ffeb3b;
+            padding: 0 5px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+        
+        footer {
+            text-align: center;
+            color: white;
+            padding: 20px;
+            margin-top: 20px;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        @media (max-width: 600px) {
+            .exercises-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .exercise {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Thao tác với Mảng trong JavaScript</h1>
+            <p class="subtitle">Thực hiện các bài tập cơ bản về mảng: đếm phần tử, tìm kiếm, sắp xếp, đảo ngược và nhiều thao tác khác</p>
+        </header>
+        
+        <div class="exercises-container">
+            <!-- Bài 1 -->
+            <div class="exercise">
+                <div class="exercise-header">
+                    <div class="exercise-number">1</div>
+                    <h2 class="exercise-title">Đếm số lớn hơn hoặc bằng 10</h2>
+                </div>
+                <p class="exercise-description">Viết chương trình khởi tạo một mảng số nguyên gồm 10 phần tử. Chương trình thực hiện tính và hiển thị xem có bao nhiêu số nguyên lớn hơn hoặc bằng 10.</p>
+                <div class="array-display" id="array1">Mảng chưa được tạo</div>
+                <div class="controls">
+                    <button id="generate1">Tạo mảng mới</button>
+                    <button id="count1">Đếm số >= 10</button>
+                </div>
+                <div class="result" id="result1">Kết quả sẽ hiển thị ở đây</div>
+            </div>
+            
+            <!-- Bài 2 -->
+            <div class="exercise">
+                <div class="exercise-header">
+                    <div class="exercise-number">2</div>
+                    <h2 class="exercise-title">Phần tử lớn nhất và vị trí</h2>
+                </div>
+                <p class="exercise-description">Viết chương trình khởi tạo một mảng số nguyên gồm 10 phần tử khác nhau. Hiển thị phần tử có giá trị lớn nhất trong mảng và vị trí của phần tử đó.</p>
+                <div class="array-display" id="array2">Mảng chưa được tạo</div>
+                <div class="controls">
+                    <button id="generate2">Tạo mảng mới</button>
+                    <button id="findMax">Tìm giá trị lớn nhất</button>
+                </div>
+                <div class="result" id="result2">Kết quả sẽ hiển thị ở đây</div>
+            </div>
+            
+            <!-- Bài 3 -->
+            <div class="exercise">
+                <div class="exercise-header">
+                    <div class="exercise-number">3</div>
+                    <h2 class="exercise-title">Giá trị lớn nhất và trung bình</h2>
+                </div>
+                <p class="exercise-description">Viết chương trình khởi tạo một mảng số nguyên. Hiển thị giá trị lớn nhất trong mảng đó. In ra giá trị trung bình của các phần tử trong mảng.</p>
+                <div class="array-display" id="array3">Mảng chưa được tạo</div>
+                <div class="controls">
+                    <button id="generate3">Tạo mảng mới</button>
+                    <button id="calc3">Tính max và trung bình</button>
+                </div>
+                <div class="result" id="result3">Kết quả sẽ hiển thị ở đây</div>
+            </div>
+            
+            <!-- Bài 4 -->
+            <div class="exercise">
+                <div class="exercise-header">
+                    <div class="exercise-number">4</div>
+                    <h2 class="exercise-title">Đảo ngược mảng</h2>
+                </div>
+                <p class="exercise-description">Viết chương trình khởi tạo hoặc nhập vào một mảng số nguyên và đảo ngược các phần tử trong mảng.</p>
+                <div class="array-display" id="array4">Mảng chưa được tạo</div>
+                <div class="controls">
+                    <button id="generate4">Tạo mảng mới</button>
+                    <button id="reverse4">Đảo ngược mảng</button>
+                </div>
+                <div class="result" id="result4">Kết quả sẽ hiển thị ở đây</div>
+            </div>
+            
+            <!-- Bài 5 -->
+            <div class="exercise">
+                <div class="exercise-header">
+                    <div class="exercise-number">5</div>
+                    <h2 class="exercise-title">Đếm số nguyên âm trong chuỗi</h2>
+                </div>
+                <p class="exercise-description">Viết chương trình đếm số nguyên âm trong một chuỗi (a, e, i, o, u).</p>
+                <div class="controls">
+                    <input type="text" id="inputString" placeholder="Nhập chuỗi..." value="Hello World">
+                    <button id="countVowels">Đếm nguyên âm</button>
+                </div>
+                <div class="result" id="result5">Kết quả sẽ hiển thị ở đây</div>
+            </div>
+            
+            <!-- Bài 6 -->
+            <div class="exercise">
+                <div class="exercise-header">
+                    <div class="exercise-number">6</div>
+                    <h2 class="exercise-title">Tìm kiếm phần tử trong mảng</h2>
+                </div>
+                <p class="exercise-description">Viết chương trình khởi tạo mảng số nguyên gồm 10 phần tử. Nhập một phần tử số nguyên V. Chương trình tìm xem V có nằm trong mảng không.</p>
+                <div class="array-display" id="array6">Mảng chưa được tạo</div>
+                <div class="controls">
+                    <button id="generate6">Tạo mảng mới</button>
+                    <input type="number" id="searchValue" placeholder="Nhập V" value="5">
+                    <button id="search6">Tìm kiếm</button>
+                </div>
+                <div class="result" id="result6">Kết quả sẽ hiển thị ở đây</div>
+            </div>
+            
+            <!-- Bài 7 -->
+            <div class="exercise">
+                <div class="exercise-header">
+                    <div class="exercise-number">7</div>
+                    <h2 class="exercise-title">Xóa phần tử khỏi mảng</h2>
+                </div>
+                <p class="exercise-description">Viết chương trình khởi tạo mảng số nguyên gồm 10 phần tử. Nhập một phần tử số nguyên V. Nếu V thuộc mảng, xóa V khỏi mảng (dịch các phần tử và gán 0 cho phần tử cuối).</p>
+                <div class="array-display" id="array7">Mảng chưa được tạo</div>
+                <div class="controls">
+                    <button id="generate7">Tạo mảng mới</button>
+                    <input type="number" id="removeValue" placeholder="Nhập V" value="5">
+                    <button id="remove7">Xóa phần tử</button>
+                </div>
+                <div class="result" id="result7">Kết quả sẽ hiển thị ở đây</div>
+            </div>
+            
+            <!-- Bài 8 -->
+            <div class="exercise">
+                <div class="exercise-header">
+                    <div class="exercise-number">8</div>
+                    <h2 class="exercise-title">Sắp xếp giảm dần</h2>
+                </div>
+                <p class="exercise-description">Viết chương trình khởi tạo hoặc nhập vào một mảng số nguyên gồm 10 phần tử. Chương trình sắp xếp mảng theo thứ tự giảm dần và hiển thị mảng đã được sắp xếp.</p>
+                <div class="array-display" id="array8">Mảng chưa được tạo</div>
+                <div class="controls">
+                    <button id="generate8">Tạo mảng mới</button>
+                    <button id="sort8">Sắp xếp giảm dần</button>
+                </div>
+                <div class="result" id="result8">Kết quả sẽ hiển thị ở đây</div>
+            </div>
+            
+            <!-- Bài 9 -->
+            <div class="exercise">
+                <div class="exercise-header">
+                    <div class="exercise-number">9</div>
+                    <h2 class="exercise-title">Nối hai mảng</h2>
+                </div>
+                <p class="exercise-description">Viết chương trình khởi tạo hai mảng số nguyên gồm 10 phần tử. Tạo mảng c gồm 20 phần tử bằng cách nối hai mảng b và a. Hiển thị mảng c.</p>
+                <div class="array-display" id="array9a">Mảng a chưa được tạo</div>
+                <div class="array-display" id="array9b">Mảng b chưa được tạo</div>
+                <div class="controls">
+                    <button id="generate9">Tạo mảng mới</button>
+                    <button id="concat9">Nối mảng a và b</button>
+                </div>
+                <div class="result" id="result9">Kết quả sẽ hiển thị ở đây</div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>© 2023 - Ứng dụng Thao tác với Mảng trong JavaScript</p>
+        </footer>
+    </div>
 
+    <script>
+        // Hàm tạo mảng ngẫu nhiên
+        function generateRandomArray(size, min = 0, max = 20) {
+            return Array.from({length: size}, () => Math.floor(Math.random() * (max - min + 1)) + min);
+        }
+        
+        // Hàm hiển thị mảng
+        function displayArray(elementId, array) {
+            document.getElementById(elementId).textContent = `[${array.join(', ')}]`;
+        }
+        
+        // Bài 1: Đếm số lớn hơn hoặc bằng 10
+        document.getElementById('generate1').addEventListener('click', function() {
+            const arr = generateRandomArray(10, 5, 25);
+            displayArray('array1', arr);
+            document.getElementById('result1').textContent = "Mảng đã được tạo mới";
+        });
+        
+        document.getElementById('count1').addEventListener('click', function() {
+            const arrayText = document.getElementById('array1').textContent;
+            if (arrayText === "Mảng chưa được tạo") {
+                document.getElementById('result1').textContent = "Vui lòng tạo mảng trước!";
+                return;
+            }
+            
+            const arr = arrayText.replace(/[\[\]]/g, '').split(', ').map(Number);
+            const count = arr.filter(num => num >= 10).length;
+            document.getElementById('result1').innerHTML = `Có <span class="highlight">${count}</span> số lớn hơn hoặc bằng 10 trong mảng`;
+        });
+        
+        // Bài 2: Tìm phần tử lớn nhất và vị trí
+        document.getElementById('generate2').addEventListener('click', function() {
+            // Tạo mảng với các phần tử duy nhất
+            const arr = [];
+            while (arr.length < 10) {
+                const num = Math.floor(Math.random() * 100) + 1;
+                if (!arr.includes(num)) {
+                    arr.push(num);
+                }
+            }
+            displayArray('array2', arr);
+            document.getElementById('result2').textContent = "Mảng đã được tạo mới";
+        });
+        
+        document.getElementById('findMax').addEventListener('click', function() {
+            const arrayText = document.getElementById('array2').textContent;
+            if (arrayText === "Mảng chưa được tạo") {
+                document.getElementById('result2').textContent = "Vui lòng tạo mảng trước!";
+                return;
+            }
+            
+            const arr = arrayText.replace(/[\[\]]/g, '').split(', ').map(Number);
+            const max = Math.max(...arr);
+            const index = arr.indexOf(max);
+            document.getElementById('result2').innerHTML = `Giá trị lớn nhất: <span class="highlight">${max}</span> tại vị trí: <span class="highlight">${index}</span>`;
+        });
+        
+        // Bài 3: Giá trị lớn nhất và trung bình
+        document.getElementById('generate3').addEventListener('click', function() {
+            const arr = generateRandomArray(10);
+            displayArray('array3', arr);
+            document.getElementById('result3').textContent = "Mảng đã được tạo mới";
+        });
+        
+        document.getElementById('calc3').addEventListener('click', function() {
+            const arrayText = document.getElementById('array3').textContent;
+            if (arrayText === "Mảng chưa được tạo") {
+                document.getElementById('result3').textContent = "Vui lòng tạo mảng trước!";
+                return;
+            }
+            
+            const arr = arrayText.replace(/[\[\]]/g, '').split(', ').map(Number);
+            const max = Math.max(...arr);
+            const avg = arr.reduce((a, b) => a + b, 0) / arr.length;
+            document.getElementById('result3').innerHTML = `Giá trị lớn nhất: <span class="highlight">${max}</span><br>Giá trị trung bình: <span class="highlight">${avg.toFixed(2)}</span>`;
+        });
+        
+        // Bài 4: Đảo ngược mảng
+        document.getElementById('generate4').addEventListener('click', function() {
+            const arr = generateRandomArray(10);
+            displayArray('array4', arr);
+            document.getElementById('result4').textContent = "Mảng đã được tạo mới";
+        });
+        
+        document.getElementById('reverse4').addEventListener('click', function() {
+            const arrayText = document.getElementById('array4').textContent;
+            if (arrayText === "Mảng chưa được tạo") {
+                document.getElementById('result4').textContent = "Vui lòng tạo mảng trước!";
+                return;
+            }
+            
+            const arr = arrayText.replace(/[\[\]]/g, '').split(', ').map(Number);
+            const reversed = [...arr].reverse();
+            displayArray('array4', reversed);
+            document.getElementById('result4').innerHTML = `Mảng đã được đảo ngược!`;
+        });
+        
+        // Bài 5: Đếm nguyên âm trong chuỗi
+        document.getElementById('countVowels').addEventListener('click', function() {
+            const str = document.getElementById('inputString').value.toLowerCase();
+            const vowels = ['a', 'e', 'i', 'o', 'u'];
+            let count = 0;
+            
+            for (let char of str) {
+                if (vowels.includes(char)) {
+                    count++;
+                }
+            }
+            
+            document.getElementById('result5').innerHTML = `Chuỗi "${str}" có <span class="highlight">${count}</span> nguyên âm`;
+        });
+        
+        // Bài 6: Tìm kiếm phần tử trong mảng
+        document.getElementById('generate6').addEventListener('click', function() {
+            const arr = generateRandomArray(10);
+            displayArray('array6', arr);
+            document.getElementById('result6').textContent = "Mảng đã được tạo mới";
+        });
+        
+        document.getElementById('search6').addEventListener('click', function() {
+            const arrayText = document.getElementById('array6').textContent;
+            if (arrayText === "Mảng chưa được tạo") {
+                document.getElementById('result6').textContent = "Vui lòng tạo mảng trước!";
+                return;
+            }
+            
+            const arr = arrayText.replace(/[\[\]]/g, '').split(', ').map(Number);
+            const v = parseInt(document.getElementById('searchValue').value);
+            const found = arr.includes(v);
+            
+            document.getElementById('result6').innerHTML = found 
+                ? `<span class="highlight">${v} is in the array</span>` 
+                : `<span class="highlight">${v} is not in the array</span>`;
+        });
+        
+        // Bài 7: Xóa phần tử khỏi mảng
+        document.getElementById('generate7').addEventListener('click', function() {
+            const arr = generateRandomArray(10);
+            displayArray('array7', arr);
+            document.getElementById('result7').textContent = "Mảng đã được tạo mới";
+        });
+        
+        document.getElementById('remove7').addEventListener('click', function() {
+            const arrayText = document.getElementById('array7').textContent;
+            if (arrayText === "Mảng chưa được tạo") {
+                document.getElementById('result7').textContent = "Vui lòng tạo mảng trước!";
+                return;
+            }
+            
+            let arr = arrayText.replace(/[\[\]]/g, '').split(', ').map(Number);
+            const v = parseInt(document.getElementById('removeValue').value);
+            const index = arr.indexOf(v);
+            
+            if (index === -1) {
+                document.getElementById('result7').innerHTML = `<span class="highlight">${v} không có trong mảng</span>`;
+                return;
+            }
+            
+            // Xóa phần tử và dịch chuyển
+            for (let i = index; i < arr.length - 1; i++) {
+                arr[i] = arr[i + 1];
+            }
+            arr[arr.length - 1] = 0;
+            
+            displayArray('array7', arr);
+            document.getElementById('result7').innerHTML = `Đã xóa <span class="highlight">${v}</span> khỏi mảng`;
+        });
+        
+        // Bài 8: Sắp xếp giảm dần
+        document.getElementById('generate8').addEventListener('click', function() {
+            const arr = generateRandomArray(10);
+            displayArray('array8', arr);
+            document.getElementById('result8').textContent = "Mảng đã được tạo mới";
+        });
+        
+        document.getElementById('sort8').addEventListener('click', function() {
+            const arrayText = document.getElementById('array8').textContent;
+            if (arrayText === "Mảng chưa được tạo") {
+                document.getElementById('result8').textContent = "Vui lòng tạo mảng trước!";
+                return;
+            }
+            
+            const arr = arrayText.replace(/[\[\]]/g, '').split(', ').map(Number);
+            arr.sort((a, b) => b - a);
+            displayArray('array8', arr);
+            document.getElementById('result8').innerHTML = `Mảng đã được sắp xếp giảm dần!`;
+        });
+        
+        // Bài 9: Nối hai mảng
+        document.getElementById('generate9').addEventListener('click', function() {
+            const arrA = generateRandomArray(10);
+            const arrB = generateRandomArray(10);
+            displayArray('array9a', arrA);
+            displayArray('array9b', arrB);
+            document.getElementById('result9').textContent = "Hai mảng đã được tạo mới";
+        });
+        
+        document.getElementById('concat9').addEventListener('click', function() {
+            const arrayTextA = document.getElementById('array9a').textContent;
+            const arrayTextB = document.getElementById('array9b').textContent;
+            
+            if (arrayTextA === "Mảng a chưa được tạo" || arrayTextB === "Mảng b chưa được tạo") {
+                document.getElementById('result9').textContent = "Vui lòng tạo cả hai mảng trước!";
+                return;
+            }
+            
+            const arrA = arrayTextA.replace(/[\[\]]/g, '').split(', ').map(Number);
+            const arrB = arrayTextB.replace(/[\[\]]/g, '').split(', ').map(Number);
+            const arrC = [...arrB, ...arrA]; // Nối mảng b và a
+            
+            document.getElementById('result9').innerHTML = `Mảng c (b + a): <span class="highlight">[${arrC.join(', ')}]</span>`;
+        });
+        
+        // Khởi tạo các mảng ban đầu
+        window.addEventListener('load', function() {
+            // Tạo mảng cho bài 1-4,6-8
+            [1,2,3,4,6,7,8].forEach(i => {
+                const btn = document.getElementById(`generate${i}`);
+                if (btn) btn.click();
+            });
+            
+            // Tạo mảng cho bài 9
+            document.getElementById('generate9').click();
+        });
+    </script>
+</body>
+</html>
