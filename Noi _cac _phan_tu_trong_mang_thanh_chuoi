@@ -1,58 +1,409 @@
 <!DOCTYPE html>
-<html>
+<html lang="vi">
 <head>
-    <title>Nối Mảng Thành Chuỗi</title>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nối Phần Tử Mảng</title>
     <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
         body {
-            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             padding: 20px;
         }
+        
         .container {
-            max-width: 600px;
-            margin: 0 auto;
-            text-align: center;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 700px;
+            padding: 30px;
+            transition: all 0.3s ease;
         }
-        button {
-            padding: 10px 20px;
-            font-size: 16px;
-            background-color: #4CAF50;
+        
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 25px;
+            font-size: 2.5rem;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+        
+        .description {
+            text-align: center;
+            color: #7f8c8d;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+        
+        .input-group {
+            display: flex;
+            margin-bottom: 20px;
+        }
+        
+        #elementInput {
+            flex: 1;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 10px 0 0 10px;
+            font-size: 1.1rem;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        
+        #elementInput:focus {
+            border-color: #3498db;
+        }
+        
+        #addButton {
+            background: #3498db;
             color: white;
             border: none;
-            border-radius: 4px;
+            padding: 15px 25px;
+            border-radius: 0 10px 10px 0;
             cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: bold;
+            transition: background 0.3s;
         }
-        button:hover {
-            background-color: #45a049;
+        
+        #addButton:hover {
+            background: #2980b9;
         }
-        #result {
-            margin-top: 20px;
+        
+        .array-container {
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 25px;
+            min-height: 100px;
+            border: 2px dashed #e9ecef;
+        }
+        
+        .array-title {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .array-title span {
+            background: #3498db;
+            color: white;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 10px;
+            font-size: 1rem;
+        }
+        
+        #arrayElements {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            min-height: 50px;
+        }
+        
+        .element {
+            background: #3498db;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .element .index {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 8px;
+            font-size: 0.9rem;
+        }
+        
+        .element .delete {
+            margin-left: 10px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: transform 0.2s;
+        }
+        
+        .element .delete:hover {
+            transform: scale(1.2);
+        }
+        
+        .actions {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .btn {
+            flex: 1;
             padding: 15px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 18px;
-            min-height: 24px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .btn i {
+            margin-right: 8px;
+            font-size: 1.2rem;
+        }
+        
+        #joinButton {
+            background: #2ecc71;
+            color: white;
+        }
+        
+        #joinButton:hover {
+            background: #27ae60;
+            transform: translateY(-3px);
+        }
+        
+        #clearButton {
+            background: #e74c3c;
+            color: white;
+        }
+        
+        #clearButton:hover {
+            background: #c0392b;
+            transform: translateY(-3px);
+        }
+        
+        .result-container {
+            background: linear-gradient(to right, #2c3e50, #4a6491);
+            color: white;
+            border-radius: 10px;
+            padding: 25px;
+            margin-top: 20px;
+        }
+        
+        .result-title {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+        }
+        
+        .result-title i {
+            margin-right: 10px;
+            font-size: 1.6rem;
+            color: #2ecc71;
+        }
+        
+        #result {
+            font-size: 1.8rem;
+            min-height: 60px;
+            word-break: break-all;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            display: flex;
+            align-items: center;
+        }
+        
+        .empty-array {
+            color: #95a5a6;
+            font-style: italic;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @media (max-width: 600px) {
+            .input-group {
+                flex-direction: column;
+            }
+            
+            #elementInput {
+                border-radius: 10px;
+                margin-bottom: 10px;
+            }
+            
+            #addButton {
+                border-radius: 10px;
+                padding: 12px;
+            }
+            
+            .actions {
+                flex-direction: column;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Nối Phần Tử Mảng Thành Chuỗi</h1>
-        <button onclick="joinArray()">Nối Mảng</button>
-        <div id="result">Kết quả sẽ hiển thị ở đây...</div>
+        <h1>NỐI PHẦN TỬ MẢNG</h1>
+        <p class="description">Nhập các phần tử vào mảng, sau đó nhấn nút "Nối Mảng" để tạo chuỗi kết quả</p>
+        
+        <div class="input-group">
+            <input type="text" id="elementInput" placeholder="Nhập phần tử mới...">
+            <button id="addButton">Thêm Phần Tử</button>
+        </div>
+        
+        <div class="array-container">
+            <div class="array-title">
+                <span id="elementCount">0</span> Phần tử trong mảng:
+            </div>
+            <div id="arrayElements" class="elements-list">
+                <div class="empty-array">Chưa có phần tử nào trong mảng</div>
+            </div>
+        </div>
+        
+        <div class="actions">
+            <button id="joinButton" class="btn"><i>✓</i> Nối Mảng</button>
+            <button id="clearButton" class="btn"><i>✕</i> Xóa Mảng</button>
+        </div>
+        
+        <div class="result-container">
+            <div class="result-title"><i>→</i> Chuỗi kết quả:</div>
+            <div id="result">Chưa có kết quả</div>
+        </div>
     </div>
 
     <script>
-        function joinArray() {
-            // Mảng mẫu theo yêu cầu
-            const myArray = ['A', 'B', 'C', 'D', 'E'];
+        document.addEventListener('DOMContentLoaded', () => {
+            // Khai báo mảng để lưu trữ các phần tử
+            let array = [];
             
-            // Nối các phần tử thành chuỗi sử dụng join()
-            const resultString = myArray.join('');
+            // Tham chiếu đến các phần tử DOM
+            const elementInput = document.getElementById('elementInput');
+            const addButton = document.getElementById('addButton');
+            const arrayElements = document.getElementById('arrayElements');
+            const elementCount = document.getElementById('elementCount');
+            const joinButton = document.getElementById('joinButton');
+            const clearButton = document.getElementById('clearButton');
+            const resultDisplay = document.getElementById('result');
             
-            // Hiển thị kết quả
-            document.getElementById('result').innerText = resultString;
-        }
+            // Hàm thêm phần tử vào mảng
+            function addElement() {
+                const value = elementInput.value.trim();
+                
+                if (value) {
+                    // Thêm giá trị vào mảng
+                    array.push(value);
+                    
+                    // Cập nhật giao diện
+                    updateArrayDisplay();
+                    
+                    // Reset input
+                    elementInput.value = '';
+                    elementInput.focus();
+                }
+            }
+            
+            // Hàm cập nhật hiển thị mảng
+            function updateArrayDisplay() {
+                // Cập nhật số lượng phần tử
+                elementCount.textContent = array.length;
+                
+                // Xóa nội dung hiện tại
+                arrayElements.innerHTML = '';
+                
+                // Hiển thị thông báo nếu mảng rỗng
+                if (array.length === 0) {
+                    arrayElements.innerHTML = '<div class="empty-array">Chưa có phần tử nào trong mảng</div>';
+                    return;
+                }
+                
+                // Hiển thị từng phần tử
+                array.forEach((element, index) => {
+                    const elementDiv = document.createElement('div');
+                    elementDiv.className = 'element';
+                    elementDiv.innerHTML = `
+                        <span class="index">${index}</span>
+                        ${element}
+                        <span class="delete" data-index="${index}">×</span>
+                    `;
+                    arrayElements.appendChild(elementDiv);
+                });
+                
+                // Thêm sự kiện xóa cho các nút delete
+                document.querySelectorAll('.element .delete').forEach(button => {
+                    button.addEventListener('click', (e) => {
+                        const index = parseInt(e.target.getAttribute('data-index'));
+                        array.splice(index, 1);
+                        updateArrayDisplay();
+                    });
+                });
+            }
+            
+            // Hàm nối các phần tử mảng thành chuỗi
+            function joinArray() {
+                if (array.length === 0) {
+                    resultDisplay.textContent = "Mảng rỗng! Hãy thêm phần tử trước khi nối.";
+                    return;
+                }
+                
+                // Sử dụng phương thức join() để nối mảng
+                const result = array.join('');
+                resultDisplay.textContent = result;
+            }
+            
+            // Hàm xóa toàn bộ mảng
+            function clearArray() {
+                array = [];
+                updateArrayDisplay();
+                resultDisplay.textContent = "Chưa có kết quả";
+            }
+            
+            // Thêm sự kiện khi nhấn nút "Thêm"
+            addButton.addEventListener('click', addElement);
+            
+            // Thêm sự kiện khi nhấn Enter trong ô input
+            elementInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    addElement();
+                }
+            });
+            
+            // Thêm sự kiện khi nhấn nút "Nối Mảng"
+            joinButton.addEventListener('click', joinArray);
+            
+            // Thêm sự kiện khi nhấn nút "Xóa Mảng"
+            clearButton.addEventListener('click', clearArray);
+            
+            // Khởi tạo hiển thị
+            updateArrayDisplay();
+        });
     </script>
 </body>
 </html>
