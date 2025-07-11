@@ -1,1 +1,358 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faking Textarea on Typing</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            padding: 20px;
+        }
+        
+        .container {
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            padding: 30px;
+            width: 100%;
+            max-width: 700px;
+            text-align: center;
+        }
+        
+        h1 {
+            color: #6a11cb;
+            margin-bottom: 20px;
+            font-size: 2.5rem;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+        
+        .subtitle {
+            color: #2575fc;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+        }
+        
+        .fake-textarea-container {
+            position: relative;
+            margin: 30px 0;
+        }
+        
+        .fake-textarea {
+            width: 100%;
+            height: 200px;
+            border: 2px solid #6a11cb;
+            border-radius: 10px;
+            padding: 20px;
+            font-size: 1.4rem;
+            line-height: 1.6;
+            text-align: left;
+            background-color: #f8f9ff;
+            overflow-y: auto;
+            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.1);
+            white-space: pre-wrap;
+            color: #333;
+            position: relative;
+        }
+        
+        .input-area {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: text;
+            z-index: 10;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+        
+        button {
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 12px 25px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            min-width: 150px;
+        }
+        
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+        
+        button:active {
+            transform: translateY(1px);
+        }
+        
+        .message {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f0f4ff;
+        }
+        
+        .instructions {
+            background-color: #f8f9fa;
+            border-left: 4px solid #6a11cb;
+            padding: 15px;
+            margin-top: 25px;
+            text-align: left;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .instructions h3 {
+            color: #6a11cb;
+            margin-bottom: 10px;
+        }
+        
+        .instructions ul {
+            padding-left: 20px;
+        }
+        
+        .instructions li {
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+        
+        .footer {
+            margin-top: 20px;
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+        
+        .cursor {
+            display: inline-block;
+            width: 2px;
+            height: 1.5rem;
+            background-color: #6a11cb;
+            margin-left: 2px;
+            animation: blink 1s infinite;
+            vertical-align: middle;
+        }
+        
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+        
+        .highlight {
+            background-color: #ffeb3b;
+            padding: 0 2px;
+            border-radius: 3px;
+        }
+        
+        .counter {
+            display: inline-block;
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>FAKING TEXTAREA ON TYPING</h1>
+        <p class="subtitle">Gõ bất kỳ phím nào để xem điều kỳ diệu xảy ra!</p>
+        
+        <div class="fake-textarea-container">
+            <div class="fake-textarea" id="fake-textarea">
+                <span class="cursor"></span>
+            </div>
+            <textarea class="input-area" id="input-area" placeholder="Click vào đây và gõ bất kỳ phím nào..."></textarea>
+        </div>
+        
+        <div class="counter">
+            Số ký tự đã gõ: <span id="char-count">0</span>
+        </div>
+        
+        <div class="message" id="message">
+            Sẵn sàng! Hãy click vào khung trên và bắt đầu gõ...
+        </div>
+        
+        <div class="controls">
+            <button id="reset-btn">Bắt đầu lại</button>
+            <button id="change-text-btn">Đổi nội dung</button>
+            <button id="show-original-btn">Hiện nội dung thật</button>
+        </div>
+        
+        <div class="instructions">
+            <h3>Cách hoạt động:</h3>
+            <ul>
+                <li>Ứng dụng này sẽ hiển thị một <span class="highlight">dòng chữ cố định</span> khi bạn gõ bất kỳ ký tự nào</li>
+                <li>Dù bạn gõ gì đi nữa, nội dung hiển thị vẫn sẽ là dòng chữ được định nghĩa sẵn</li>
+                <li>Bạn có thể <span class="highlight">đổi nội dung</span> hoặc <span class="highlight">xem nội dung thật</span> mà bạn đã gõ</li>
+                <li>Con trỏ nhấp nháy chỉ vị trí hiện tại trong văn bản</li>
+            </ul>
+        </div>
+        
+        <div class="footer">
+            Ứng dụng vui - Faking Textarea on Typing | Sử dụng HTML, CSS và JavaScript
+        </div>
+    </div>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const fakeTextarea = document.getElementById('fake-textarea');
+            const inputArea = document.getElementById('input-area');
+            const messageElement = document.getElementById('message');
+            const resetButton = document.getElementById('reset-btn');
+            const changeTextButton = document.getElementById('change-text-btn');
+            const showOriginalButton = document.getElementById('show-original-btn');
+            const charCountElement = document.getElementById('char-count');
+            
+            // Mảng các dòng chữ cố định
+            const fixedTexts = [
+                "Chào mừng bạn đến với ứng dụng vui này! Hãy thử gõ và xem điều kỳ diệu xảy ra.",
+                "Dù bạn gõ gì đi nữa, tôi vẫn sẽ hiển thị dòng chữ này. Thật thú vị phải không?",
+                "Công nghệ thật kỳ diệu! Bạn có thể tạo ra những hiệu ứng rất thú vị với JavaScript.",
+                "Hãy thử gõ thật nhanh và xem các ký tự hiện ra như thế nào. Thật là ảo diệu!",
+                "Bạn có biết rằng ứng dụng này sử dụng mảng và vòng lặp để xử lý sự kiện gõ phím?",
+                "Xin chào! Đây là một ứng dụng vui nhỏ để minh họa cách JavaScript có thể điều khiển nội dung.",
+                "Hãy thử nút 'Đổi nội dung' để xem các thông điệp khác nhau. Mỗi lần sẽ là một bất ngờ!",
+                "Ứng dụng này hoàn toàn được xây dựng bằng HTML, CSS và JavaScript. Thật tuyệt vời!"
+            ];
+            
+            // Biến trạng thái
+            let currentTextIndex = 0;
+            let currentPosition = 0;
+            let originalText = "";
+            let isShowingOriginal = false;
+            
+            // Khởi tạo ứng dụng
+            function initializeApp() {
+                currentPosition = 0;
+                originalText = "";
+                isShowingOriginal = false;
+                fakeTextarea.innerHTML = '<span class="cursor"></span>';
+                inputArea.value = "";
+                charCountElement.textContent = "0";
+                messageElement.textContent = "Sẵn sàng! Hãy click vào khung trên và bắt đầu gõ...";
+                messageElement.style.backgroundColor = "#f0f4ff";
+                messageElement.style.color = "#333";
+                inputArea.focus();
+            }
+            
+            // Hiển thị văn bản giả
+            function updateFakeText() {
+                const text = fixedTexts[currentTextIndex];
+                if (currentPosition >= text.length) {
+                    currentPosition = 0;
+                }
+                
+                const displayedText = text.substring(0, currentPosition);
+                fakeTextarea.innerHTML = displayedText + '<span class="cursor"></span>';
+            }
+            
+            // Xử lý sự kiện gõ phím
+            inputArea.addEventListener('keydown', (e) => {
+                // Bỏ qua các phím điều hướng và chức năng
+                if (e.key.length > 1 && !['Backspace', 'Delete', 'Enter'].includes(e.key)) {
+                    return;
+                }
+                
+                e.preventDefault();
+                
+                // Lưu lại nội dung thật
+                if (e.key === 'Backspace' || e.key === 'Delete') {
+                    originalText = originalText.slice(0, -1);
+                } else if (e.key === 'Enter') {
+                    originalText += '\n';
+                } else {
+                    originalText += e.key;
+                }
+                
+                // Cập nhật số ký tự đã gõ
+                charCountElement.textContent = originalText.length;
+                
+                // Nếu đang hiển thị nội dung thật thì cập nhật
+                if (isShowingOriginal) {
+                    fakeTextarea.innerHTML = originalText + '<span class="cursor"></span>';
+                    return;
+                }
+                
+                // Tăng vị trí và cập nhật nội dung giả
+                currentPosition++;
+                updateFakeText();
+                
+                // Hiển thị thông báo
+                if (currentPosition === 1) {
+                    messageElement.textContent = "Bạn đang gõ nhưng thực ra bạn đang xem nội dung cố định...";
+                    messageElement.style.backgroundColor = "#d4edda";
+                    messageElement.style.color = "#155724";
+                }
+            });
+            
+            // Xử lý nút reset
+            resetButton.addEventListener('click', initializeApp);
+            
+            // Xử lý nút đổi nội dung
+            changeTextButton.addEventListener('click', () => {
+                currentTextIndex = (currentTextIndex + 1) % fixedTexts.length;
+                currentPosition = 0;
+                isShowingOriginal = false;
+                updateFakeText();
+                messageElement.textContent = "Đã đổi nội dung! Hãy tiếp tục gõ...";
+                messageElement.style.backgroundColor = "#cce5ff";
+                messageElement.style.color = "#004085";
+            });
+            
+            // Xử lý nút hiện nội dung thật
+            showOriginalButton.addEventListener('click', () => {
+                isShowingOriginal = !isShowingOriginal;
+                if (isShowingOriginal) {
+                    fakeTextarea.innerHTML = originalText + '<span class="cursor"></span>';
+                    messageElement.textContent = "Đây là nội dung THẬT mà bạn đã gõ!";
+                    messageElement.style.backgroundColor = "#fff3cd";
+                    messageElement.style.color = "#856404";
+                } else {
+                    updateFakeText();
+                    messageElement.textContent = "Quay lại hiển thị nội dung CỐ ĐỊNH";
+                    messageElement.style.backgroundColor = "#d4edda";
+                    messageElement.style.color = "#155724";
+                }
+            });
+            
+            // Tập trung vào input khi click vào fake textarea
+            fakeTextarea.addEventListener('click', () => {
+                inputArea.focus();
+            });
+            
+            // Khởi tạo ứng dụng
+            initializeApp();
+        });
+    </script>
+</body>
+</html>
